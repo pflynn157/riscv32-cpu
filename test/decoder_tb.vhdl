@@ -1,10 +1,10 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity and_tb is
-end and_tb;
+entity decoder_tb is
+end decoder_tb;
 
-architecture behavior of and_tb is
+architecture behavior of decoder_tb is
     -- Declare our component
     component AND2
         port(clk, A, B : in std_logic; F : out std_logic);

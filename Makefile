@@ -1,7 +1,7 @@
 # The files
-FILES		= src/and.vhdl
+FILES		= src/decoder.vhdl
 SIMDIR		= sim
-SIMFILES	= test/and_tb.vhdl
+SIMFILES	= test/decoder_tb.vhdl
 
 # GHDL
 GHDL_CMD	= ghdl
@@ -21,15 +21,15 @@ compile:
 	mkdir -p sim
 	ghdl -a $(GHDL_FLAGS) $(GHDL_WORKDIR) $(FILES)
 	ghdl -a $(GHDL_FLAGS) $(GHDL_WORKDIR) $(SIMFILES)
-	ghdl -e -o sim/and_tb $(GHDL_FLAGS) $(GHDL_WORKDIR) and_tb
+	ghdl -e -o sim/decoder_tb $(GHDL_FLAGS) $(GHDL_WORKDIR) decoder_tb
 
 run:
 	cd sim; \
-	ghdl -r $(GHDL_FLAGS) and_tb $(GHDL_STOP) --wave=wave.ghw; \
+	ghdl -r $(GHDL_FLAGS) decoder_tb $(GHDL_STOP) --wave=decoder.ghw; \
 	cd ..
 
 view:
-	gtkwave sim/wave.ghw
+	gtkwave sim/decoder.ghw
 
 clean:
 	$(GHDL_CMD) --clean --workdir=sim

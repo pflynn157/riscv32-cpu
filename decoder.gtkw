@@ -1,0 +1,25 @@
+[*]
+[*] GTKWave Analyzer v3.3.108 (w)1999-2020 BSI
+[*] Sat Nov 20 21:49:52 2021
+[*]
+[dumpfile] "/home/patrick/Projects_Github/riscv32-cpu/sim/decoder.ghw"
+[dumpfile_mtime] "Sat Nov 20 21:49:26 2021"
+[dumpfile_size] 1161
+[savefile] "/home/patrick/Projects_Github/riscv32-cpu/decoder.gtkw"
+[timestart] 0
+[size] 1920 1033
+[pos] -461 -210
+*-25.917328 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[sst_width] 238
+[signals_width] 78
+[sst_expanded] 1
+[sst_vpaned_height] 337
+@28
+top.decoder_tb.clk
+top.decoder_tb.a
+top.decoder_tb.b
+@29
+top.decoder_tb.f
+[pattern_trace] 1
+[pattern_trace] 0
