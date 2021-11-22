@@ -41,6 +41,20 @@ architecture Behavior of CPU is
         );
     end component;
     
+    -- The register file
+    component Registers is
+        port (
+            clk     : in std_logic;
+            sel_A   : in std_logic_vector(4 downto 0);
+            sel_B   : in std_logic_vector(4 downto 0);
+            sel_D   : in std_logic_vector(4 downto 0);
+            I_dataD : in std_logic_vector(31 downto 0);
+            I_enD   : in std_logic;
+            O_dataA : out std_logic_vector(31 downto 0);
+            O_dataB : out std_logic_vector(31 downto 0)
+        );
+    end component;
+    
     -- Signals for the decoder component
     signal instr : std_logic_vector(31 downto 0);
     signal opcode, funct7, imm2 : std_logic_vector(6 downto 0);
@@ -54,9 +68,15 @@ architecture Behavior of CPU is
     signal ALU_Op : std_logic_vector(2 downto 0);
     signal B_Inv, Zero : std_logic := '0';
     
+    -- Signals for the register file component
+    signal sel_A, sel_B, sel_D : std_logic_vector(4 downto 0);
+    signal I_dataD, O_dataA, O_dataB : std_logic_vector(31 downto 0);
+    signal I_enD : std_logic;
+    
     -- Intermediate signals for the pipeline
-    signal rd_1, rs1_1, rs2_1 : std_logic_vector(4 downto 0);
-    signal srcImm : std_logic := '0';
+    signal sel_D_1, sel_D_2 : std_logic_vector(4 downto 0);
+    signal srcImm, RegWrite : std_logic := '0';
+    signal Imm_S2 : std_logic_vector(11 downto 0);
 
     -- Pipeline and program counter signals
     signal PC : std_logic_vector(31 downto 0) := X"00000000";
@@ -86,6 +106,18 @@ begin
         Zero => Zero,
         Result => Result
     );
+    
+    -- Connect the registers
+    uut_Registers : Registers port map (
+        clk => clk,
+        sel_A => sel_A,
+        sel_B => sel_B,
+        sel_D => sel_D,
+        I_dataD => I_dataD,
+        I_enD => I_enD,
+        O_dataA => O_dataA,
+        O_dataB => O_dataB
+    );
 
     process (clk)
     begin
@@ -98,15 +130,19 @@ begin
                     
                 -- Instruction decode
                 elsif stage = 2 and IF_stall = '0' then
-                    rd_1 <= rd;
-                    rs1_1 <= rs1;
-                    rs2_1 <= rs2;
+                    sel_D_1 <= rd;
+                    sel_A <= rs1;
+                    sel_B <= rs2;
                     srcImm <= '0';
+                    RegWrite <= '0';
+                    
+                    Imm_S2 <= Imm;
                     
                     case opcode is
                         -- ALU instructions
                         when "0010011" | "0110011" =>
                             ALU_op <= funct3;
+                            RegWrite <= '1';
                             if opcode(5) = '0' then
                                 srcImm <= '1';
                             end if;
@@ -114,8 +150,8 @@ begin
                         -- TODO: We should probably generate some sort of fault here...
                         when others =>
                     end case;
-                        
-                    if rd = rs1_1 or rd = rs2_1 then
+                    
+                    if rd = sel_A or rd = sel_B then
                         IF_stall <= '1';
                     end if;
                 elsif stage = 2 and IF_stall = '1' then
@@ -123,11 +159,13 @@ begin
                 
                 -- Instruction execute
                 elsif stage = 3 then
-                    if srcImm = '1' then
-                        A <= X"00000000";
-                        B <= "00000000000000000000" & Imm;
-                    else
+                    sel_D_2 <= sel_D_1;
                     
+                    A <= O_dataA;
+                    if srcImm = '1' then
+                        B <= "00000000000000000000" & Imm_S2;
+                    else
+                        B <= O_dataB;
                     end if;
                 
                 -- Memory
@@ -135,6 +173,15 @@ begin
                 
                 -- Write-back
                 elsif stage = 5 then
+                    if RegWrite = '1' then
+                        sel_D <= sel_D_2;
+                        I_dataD <= Result;
+                        I_enD <= '1';
+                    else
+                        I_enD <= '0';
+                    end if;
+                    
+                    -- Prepare for instrution fetch on next cycle
                     O_PC <= PC;
                 end if;
             end loop;

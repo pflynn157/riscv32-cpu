@@ -3,7 +3,8 @@ FILES		= src/decoder.vhdl \
                src/alu.vhdl \
                src/memory.vhdl \
                src/instr_memory.vhdl \
-               src/cpu.vhdl
+               src/cpu.vhdl \
+               src/registers.vhdl
 SIMDIR		= sim
 SIMFILES	= test/decoder_tb.vhdl \
            test/mem_tb.vhdl \
