@@ -12,7 +12,6 @@ architecture Behavior of cpu_tb is
         port (
             clk     : in std_logic;
             I_instr : in std_logic_vector(31 downto 0);
-            ready   : out std_logic;
             O_PC    : out std_logic_vector(31 downto 0)
         );
     end component;
@@ -23,7 +22,6 @@ architecture Behavior of cpu_tb is
     
     -- The other signals
     signal I_instr, O_PC : std_logic_vector(31 downto 0) := X"00000000";
-    signal ready : std_logic := '0';
     
     -- Our test program
     constant SIZE : integer := 2;
@@ -36,7 +34,6 @@ begin
     uut : CPU port map (
         clk => clk,
         I_instr => I_instr,
-        ready => ready,
         O_PC => O_PC
     );
     
@@ -53,12 +50,12 @@ begin
     sim_proc : process
     begin
         I_instr <= memory(0);
-        wait until ready = '1';
+        wait until O_PC'event;
         
         for i in 1 to SIZE loop
             if to_integer(unsigned(O_PC)) < SIZE then
                 I_instr <= memory(to_integer(unsigned(O_PC)));
-                wait until ready = '1';
+                wait until O_PC'event;
             end if;
         end loop;
         

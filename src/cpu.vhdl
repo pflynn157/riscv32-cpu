@@ -6,7 +6,6 @@ entity CPU is
     port (
         clk     : in std_logic;
         I_instr : in std_logic_vector(31 downto 0);
-        ready   : out std_logic;
         O_PC    : out std_logic_vector(31 downto 0)
     );
 end CPU;
@@ -39,7 +38,6 @@ architecture Behavior of CPU is
     signal UJ_imm : std_logic_vector(19 downto 0);
 
     -- Pipeline and program counter signals
-    signal stage : integer := 1;
     signal PC : std_logic_vector(31 downto 0) := X"00000000";
 begin
     -- Connect the decoder
@@ -60,36 +58,37 @@ begin
     process (clk)
     begin
         if rising_edge(clk) then
-            case stage is
-                when 1 =>
-                    PC <= std_logic_vector(unsigned(PC) + 1);
-                    instr <= I_instr;
-                    ready <= '0';
-                    stage <= 2;
-                    
-                -- Decode
-                when 2 =>
-                
-                    stage <= 3;
-                    
-                -- Execute
-                when 3 =>
-                    
-                    stage <= 4;
-                    
-                -- Memory
-                when 4 =>
-                    stage <= 5;
-                    
-                -- Write-back
-                when 5 =>
-                    O_PC <= PC;
-                    ready <= '1';
-                    stage <= 1;
-                    
-                -- Waste electricity
-                when others =>
-            end case;
+            for stage in 1 to 5 loop
+                case stage is
+                    -- Instruction fetch
+                    when 1 =>
+                        PC <= std_logic_vector(unsigned(PC) + 1);
+                        instr <= I_instr;
+                        
+                    -- Decode
+                    when 2 =>
+                        case opcode is
+                            -- ALU instructions
+                            when "0010011" | "0110011" =>
+                        
+                            -- TODO: We should probably generate some sort of fault here...
+                            when others =>
+                        end case;
+                        
+                    -- Execute
+                    when 3 =>
+                        
+                    -- Memory
+                    when 4 =>
+                        
+                    -- Write-back
+                    when 5 =>
+                        O_PC <= PC;
+                        
+                    -- Waste electricity
+                    when others =>
+                end case;
+            end loop;
         end if;
     end process;
 end Behavior;
