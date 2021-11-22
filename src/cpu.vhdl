@@ -29,6 +29,18 @@ architecture Behavior of CPU is
         );
     end component;
     
+    -- The ALU component
+    component ALU is
+        port (
+            A      : in std_logic_vector(31 downto 0);
+            B      : in std_logic_vector(31 downto 0);
+            Op     : in std_logic_vector(2 downto 0);
+            B_Inv  : in std_logic;
+            Zero   : out std_logic;
+            Result : out std_logic_vector(31 downto 0)
+        );
+    end component;
+    
     -- Signals for the decoder component
     signal instr : std_logic_vector(31 downto 0);
     signal opcode, funct7, imm2 : std_logic_vector(6 downto 0);
@@ -37,8 +49,14 @@ architecture Behavior of CPU is
     signal imm : std_logic_vector(11 downto 0);
     signal UJ_imm : std_logic_vector(19 downto 0);
     
+    -- Signals for the ALU component
+    signal A, B, Result : std_logic_vector(31 downto 0);
+    signal ALU_Op : std_logic_vector(2 downto 0);
+    signal B_Inv, Zero : std_logic := '0';
+    
     -- Intermediate signals for the pipeline
     signal rd_1, rs1_1, rs2_1 : std_logic_vector(4 downto 0);
+    signal srcImm : std_logic := '0';
 
     -- Pipeline and program counter signals
     signal PC : std_logic_vector(31 downto 0) := X"00000000";
@@ -58,6 +76,16 @@ begin
         imm2 => imm2,
         UJ_imm => UJ_imm
     );
+    
+    -- Connect the ALU
+    uut_ALU : ALU port map (
+        A => A,
+        B => B,
+        Op => ALU_Op,
+        B_Inv => B_Inv,
+        Zero => Zero,
+        Result => Result
+    );
 
     process (clk)
     begin
@@ -73,10 +101,15 @@ begin
                     rd_1 <= rd;
                     rs1_1 <= rs1;
                     rs2_1 <= rs2;
+                    srcImm <= '0';
                     
                     case opcode is
                         -- ALU instructions
                         when "0010011" | "0110011" =>
+                            ALU_op <= funct3;
+                            if opcode(5) = '0' then
+                                srcImm <= '1';
+                            end if;
                         
                         -- TODO: We should probably generate some sort of fault here...
                         when others =>
@@ -90,6 +123,12 @@ begin
                 
                 -- Instruction execute
                 elsif stage = 3 then
+                    if srcImm = '1' then
+                        A <= X"00000000";
+                        B <= "00000000000000000000" & Imm;
+                    else
+                    
+                    end if;
                 
                 -- Memory
                 elsif stage = 4 then

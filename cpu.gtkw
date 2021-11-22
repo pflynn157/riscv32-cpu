@@ -1,10 +1,10 @@
 [*]
 [*] GTKWave Analyzer v3.3.108 (w)1999-2020 BSI
-[*] Mon Nov 22 19:48:27 2021
+[*] Mon Nov 22 20:01:47 2021
 [*]
 [dumpfile] "/home/patrick/Projects_Github/riscv32-cpu/sim/cpu_tb.ghw"
-[dumpfile_mtime] "Mon Nov 22 19:48:15 2021"
-[dumpfile_size] 3303
+[dumpfile_mtime] "Mon Nov 22 20:01:12 2021"
+[dumpfile_size] 4492
 [savefile] "/home/patrick/Projects_Github/riscv32-cpu/cpu.gtkw"
 [timestart] 0
 [size] 1920 1033
@@ -13,6 +13,7 @@
 [treeopen] top.
 [treeopen] top.cpu_tb.
 [treeopen] top.cpu_tb.uut.
+[treeopen] top.cpu_tb.uut.uut_alu.
 [sst_width] 238
 [signals_width] 204
 [sst_expanded] 1
@@ -38,5 +39,15 @@ top.cpu_tb.clk
 #{top.cpu_tb.uut.uut_decoder.funct3[2:0]} top.cpu_tb.uut.uut_decoder.funct3[2] top.cpu_tb.uut.uut_decoder.funct3[1] top.cpu_tb.uut.uut_decoder.funct3[0]
 @22
 #{top.cpu_tb.uut.uut_decoder.imm[11:0]} top.cpu_tb.uut.uut_decoder.imm[11] top.cpu_tb.uut.uut_decoder.imm[10] top.cpu_tb.uut.uut_decoder.imm[9] top.cpu_tb.uut.uut_decoder.imm[8] top.cpu_tb.uut.uut_decoder.imm[7] top.cpu_tb.uut.uut_decoder.imm[6] top.cpu_tb.uut.uut_decoder.imm[5] top.cpu_tb.uut.uut_decoder.imm[4] top.cpu_tb.uut.uut_decoder.imm[3] top.cpu_tb.uut.uut_decoder.imm[2] top.cpu_tb.uut.uut_decoder.imm[1] top.cpu_tb.uut.uut_decoder.imm[0]
+@200
+-
+@28
+#{top.cpu_tb.uut.uut_alu.op[2:0]} top.cpu_tb.uut.uut_alu.op[2] top.cpu_tb.uut.uut_alu.op[1] top.cpu_tb.uut.uut_alu.op[0]
+@22
+#{top.cpu_tb.uut.uut_alu.a[31:0]} top.cpu_tb.uut.uut_alu.a[31] top.cpu_tb.uut.uut_alu.a[30] top.cpu_tb.uut.uut_alu.a[29] top.cpu_tb.uut.uut_alu.a[28] top.cpu_tb.uut.uut_alu.a[27] top.cpu_tb.uut.uut_alu.a[26] top.cpu_tb.uut.uut_alu.a[25] top.cpu_tb.uut.uut_alu.a[24] top.cpu_tb.uut.uut_alu.a[23] top.cpu_tb.uut.uut_alu.a[22] top.cpu_tb.uut.uut_alu.a[21] top.cpu_tb.uut.uut_alu.a[20] top.cpu_tb.uut.uut_alu.a[19] top.cpu_tb.uut.uut_alu.a[18] top.cpu_tb.uut.uut_alu.a[17] top.cpu_tb.uut.uut_alu.a[16] top.cpu_tb.uut.uut_alu.a[15] top.cpu_tb.uut.uut_alu.a[14] top.cpu_tb.uut.uut_alu.a[13] top.cpu_tb.uut.uut_alu.a[12] top.cpu_tb.uut.uut_alu.a[11] top.cpu_tb.uut.uut_alu.a[10] top.cpu_tb.uut.uut_alu.a[9] top.cpu_tb.uut.uut_alu.a[8] top.cpu_tb.uut.uut_alu.a[7] top.cpu_tb.uut.uut_alu.a[6] top.cpu_tb.uut.uut_alu.a[5] top.cpu_tb.uut.uut_alu.a[4] top.cpu_tb.uut.uut_alu.a[3] top.cpu_tb.uut.uut_alu.a[2] top.cpu_tb.uut.uut_alu.a[1] top.cpu_tb.uut.uut_alu.a[0]
+#{top.cpu_tb.uut.uut_alu.b[31:0]} top.cpu_tb.uut.uut_alu.b[31] top.cpu_tb.uut.uut_alu.b[30] top.cpu_tb.uut.uut_alu.b[29] top.cpu_tb.uut.uut_alu.b[28] top.cpu_tb.uut.uut_alu.b[27] top.cpu_tb.uut.uut_alu.b[26] top.cpu_tb.uut.uut_alu.b[25] top.cpu_tb.uut.uut_alu.b[24] top.cpu_tb.uut.uut_alu.b[23] top.cpu_tb.uut.uut_alu.b[22] top.cpu_tb.uut.uut_alu.b[21] top.cpu_tb.uut.uut_alu.b[20] top.cpu_tb.uut.uut_alu.b[19] top.cpu_tb.uut.uut_alu.b[18] top.cpu_tb.uut.uut_alu.b[17] top.cpu_tb.uut.uut_alu.b[16] top.cpu_tb.uut.uut_alu.b[15] top.cpu_tb.uut.uut_alu.b[14] top.cpu_tb.uut.uut_alu.b[13] top.cpu_tb.uut.uut_alu.b[12] top.cpu_tb.uut.uut_alu.b[11] top.cpu_tb.uut.uut_alu.b[10] top.cpu_tb.uut.uut_alu.b[9] top.cpu_tb.uut.uut_alu.b[8] top.cpu_tb.uut.uut_alu.b[7] top.cpu_tb.uut.uut_alu.b[6] top.cpu_tb.uut.uut_alu.b[5] top.cpu_tb.uut.uut_alu.b[4] top.cpu_tb.uut.uut_alu.b[3] top.cpu_tb.uut.uut_alu.b[2] top.cpu_tb.uut.uut_alu.b[1] top.cpu_tb.uut.uut_alu.b[0]
+#{top.cpu_tb.uut.uut_alu.result[31:0]} top.cpu_tb.uut.uut_alu.result[31] top.cpu_tb.uut.uut_alu.result[30] top.cpu_tb.uut.uut_alu.result[29] top.cpu_tb.uut.uut_alu.result[28] top.cpu_tb.uut.uut_alu.result[27] top.cpu_tb.uut.uut_alu.result[26] top.cpu_tb.uut.uut_alu.result[25] top.cpu_tb.uut.uut_alu.result[24] top.cpu_tb.uut.uut_alu.result[23] top.cpu_tb.uut.uut_alu.result[22] top.cpu_tb.uut.uut_alu.result[21] top.cpu_tb.uut.uut_alu.result[20] top.cpu_tb.uut.uut_alu.result[19] top.cpu_tb.uut.uut_alu.result[18] top.cpu_tb.uut.uut_alu.result[17] top.cpu_tb.uut.uut_alu.result[16] top.cpu_tb.uut.uut_alu.result[15] top.cpu_tb.uut.uut_alu.result[14] top.cpu_tb.uut.uut_alu.result[13] top.cpu_tb.uut.uut_alu.result[12] top.cpu_tb.uut.uut_alu.result[11] top.cpu_tb.uut.uut_alu.result[10] top.cpu_tb.uut.uut_alu.result[9] top.cpu_tb.uut.uut_alu.result[8] top.cpu_tb.uut.uut_alu.result[7] top.cpu_tb.uut.uut_alu.result[6] top.cpu_tb.uut.uut_alu.result[5] top.cpu_tb.uut.uut_alu.result[4] top.cpu_tb.uut.uut_alu.result[3] top.cpu_tb.uut.uut_alu.result[2] top.cpu_tb.uut.uut_alu.result[1] top.cpu_tb.uut.uut_alu.result[0]
+@201
+-
 [pattern_trace] 1
 [pattern_trace] 0
