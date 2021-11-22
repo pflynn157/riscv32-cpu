@@ -36,9 +36,13 @@ architecture Behavior of CPU is
     signal funct3 : std_logic_vector(2 downto 0);
     signal imm : std_logic_vector(11 downto 0);
     signal UJ_imm : std_logic_vector(19 downto 0);
+    
+    -- Intermediate signals for the pipeline
+    signal rd_1, rs1_1, rs2_1 : std_logic_vector(4 downto 0);
 
     -- Pipeline and program counter signals
     signal PC : std_logic_vector(31 downto 0) := X"00000000";
+    signal IF_stall : std_logic := '0';
 begin
     -- Connect the decoder
     uut_decoder : Decoder port map (
@@ -59,35 +63,41 @@ begin
     begin
         if rising_edge(clk) then
             for stage in 1 to 5 loop
-                case stage is
-                    -- Instruction fetch
-                    when 1 =>
-                        PC <= std_logic_vector(unsigned(PC) + 1);
-                        instr <= I_instr;
+                -- Instruction fetch
+                if stage = 1 and IF_stall = '0' then
+                    PC <= std_logic_vector(unsigned(PC) + 1);
+                    instr <= I_instr;
+                    
+                -- Instruction decode
+                elsif stage = 2 and IF_stall = '0' then
+                    rd_1 <= rd;
+                    rs1_1 <= rs1;
+                    rs2_1 <= rs2;
+                    
+                    case opcode is
+                        -- ALU instructions
+                        when "0010011" | "0110011" =>
                         
-                    -- Decode
-                    when 2 =>
-                        case opcode is
-                            -- ALU instructions
-                            when "0010011" | "0110011" =>
+                        -- TODO: We should probably generate some sort of fault here...
+                        when others =>
+                    end case;
                         
-                            -- TODO: We should probably generate some sort of fault here...
-                            when others =>
-                        end case;
-                        
-                    -- Execute
-                    when 3 =>
-                        
-                    -- Memory
-                    when 4 =>
-                        
-                    -- Write-back
-                    when 5 =>
-                        O_PC <= PC;
-                        
-                    -- Waste electricity
-                    when others =>
-                end case;
+                    if rd = rs1_1 or rd = rs2_1 then
+                        IF_stall <= '1';
+                    end if;
+                elsif stage = 2 and IF_stall = '1' then
+                    IF_stall <= '0';
+                
+                -- Instruction execute
+                elsif stage = 3 then
+                
+                -- Memory
+                elsif stage = 4 then
+                
+                -- Write-back
+                elsif stage = 5 then
+                    O_PC <= PC;
+                end if;
             end loop;
         end if;
     end process;

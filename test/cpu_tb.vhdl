@@ -24,10 +24,12 @@ architecture Behavior of cpu_tb is
     signal I_instr, O_PC : std_logic_vector(31 downto 0) := X"00000000";
     
     -- Our test program
-    constant SIZE : integer := 2;
-    type instr_memory is array (0 to 1) of std_logic_vector(31 downto 0);
+    constant SIZE : integer := 4;
+    type instr_memory is array (0 to (SIZE - 1)) of std_logic_vector(31 downto 0);
     signal memory : instr_memory := (
+        "000000000101" & "00000" & "000" & "00001" & "0010011",   -- ADDI X1, X0, 5
         "000000000110" & "00000" & "000" & "00010" & "0010011",   -- ADDI X2, X0, 6
+        "000000001010" & "00010" & "000" & "00011" & "0010011",   -- ADDI X3, X2, 10
         "000000000101" & "00000" & "000" & "00001" & "0010011"    -- ADDI X1, X0, 5
     );
 begin
