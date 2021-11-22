@@ -6,6 +6,7 @@ entity CPU is
     port (
         clk     : in std_logic;
         I_instr : in std_logic_vector(31 downto 0);
+        ready   : out std_logic;
         O_PC    : out std_logic_vector(31 downto 0)
     );
 end CPU;
@@ -63,6 +64,7 @@ begin
                 when 1 =>
                     PC <= std_logic_vector(unsigned(PC) + 1);
                     instr <= I_instr;
+                    ready <= '0';
                     stage <= 2;
                     
                 -- Decode
@@ -82,6 +84,7 @@ begin
                 -- Write-back
                 when 5 =>
                     O_PC <= PC;
+                    ready <= '1';
                     stage <= 1;
                     
                 -- Waste electricity
