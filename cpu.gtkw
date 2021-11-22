@@ -1,20 +1,20 @@
 [*]
 [*] GTKWave Analyzer v3.3.108 (w)1999-2020 BSI
-[*] Sun Nov 21 21:18:41 2021
+[*] Mon Nov 22 00:47:05 2021
 [*]
 [dumpfile] "/home/patrick/Projects_Github/riscv32-cpu/sim/cpu_tb.ghw"
-[dumpfile_mtime] "Sun Nov 21 21:18:28 2021"
-[dumpfile_size] 1934
+[dumpfile_mtime] "Mon Nov 22 00:46:18 2021"
+[dumpfile_size] 2947
 [savefile] "/home/patrick/Projects_Github/riscv32-cpu/cpu.gtkw"
 [timestart] 0
 [size] 1920 1033
 [pos] -1 -1
-*-25.917328 55000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-25.917328 50000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
 [treeopen] top.cpu_tb.
 [treeopen] top.cpu_tb.uut.
 [sst_width] 238
-[signals_width] 134
+[signals_width] 204
 [sst_expanded] 1
 [sst_vpaned_height] 337
 @28
@@ -26,7 +26,17 @@ top.cpu_tb.clk
 -
 @420
 top.cpu_tb.uut.stage
-@23
+@22
 #{top.cpu_tb.uut.o_pc[31:0]} top.cpu_tb.uut.o_pc[31] top.cpu_tb.uut.o_pc[30] top.cpu_tb.uut.o_pc[29] top.cpu_tb.uut.o_pc[28] top.cpu_tb.uut.o_pc[27] top.cpu_tb.uut.o_pc[26] top.cpu_tb.uut.o_pc[25] top.cpu_tb.uut.o_pc[24] top.cpu_tb.uut.o_pc[23] top.cpu_tb.uut.o_pc[22] top.cpu_tb.uut.o_pc[21] top.cpu_tb.uut.o_pc[20] top.cpu_tb.uut.o_pc[19] top.cpu_tb.uut.o_pc[18] top.cpu_tb.uut.o_pc[17] top.cpu_tb.uut.o_pc[16] top.cpu_tb.uut.o_pc[15] top.cpu_tb.uut.o_pc[14] top.cpu_tb.uut.o_pc[13] top.cpu_tb.uut.o_pc[12] top.cpu_tb.uut.o_pc[11] top.cpu_tb.uut.o_pc[10] top.cpu_tb.uut.o_pc[9] top.cpu_tb.uut.o_pc[8] top.cpu_tb.uut.o_pc[7] top.cpu_tb.uut.o_pc[6] top.cpu_tb.uut.o_pc[5] top.cpu_tb.uut.o_pc[4] top.cpu_tb.uut.o_pc[3] top.cpu_tb.uut.o_pc[2] top.cpu_tb.uut.o_pc[1] top.cpu_tb.uut.o_pc[0]
+@200
+-
+@22
+#{top.cpu_tb.uut.uut_decoder.instr[31:0]} top.cpu_tb.uut.uut_decoder.instr[31] top.cpu_tb.uut.uut_decoder.instr[30] top.cpu_tb.uut.uut_decoder.instr[29] top.cpu_tb.uut.uut_decoder.instr[28] top.cpu_tb.uut.uut_decoder.instr[27] top.cpu_tb.uut.uut_decoder.instr[26] top.cpu_tb.uut.uut_decoder.instr[25] top.cpu_tb.uut.uut_decoder.instr[24] top.cpu_tb.uut.uut_decoder.instr[23] top.cpu_tb.uut.uut_decoder.instr[22] top.cpu_tb.uut.uut_decoder.instr[21] top.cpu_tb.uut.uut_decoder.instr[20] top.cpu_tb.uut.uut_decoder.instr[19] top.cpu_tb.uut.uut_decoder.instr[18] top.cpu_tb.uut.uut_decoder.instr[17] top.cpu_tb.uut.uut_decoder.instr[16] top.cpu_tb.uut.uut_decoder.instr[15] top.cpu_tb.uut.uut_decoder.instr[14] top.cpu_tb.uut.uut_decoder.instr[13] top.cpu_tb.uut.uut_decoder.instr[12] top.cpu_tb.uut.uut_decoder.instr[11] top.cpu_tb.uut.uut_decoder.instr[10] top.cpu_tb.uut.uut_decoder.instr[9] top.cpu_tb.uut.uut_decoder.instr[8] top.cpu_tb.uut.uut_decoder.instr[7] top.cpu_tb.uut.uut_decoder.instr[6] top.cpu_tb.uut.uut_decoder.instr[5] top.cpu_tb.uut.uut_decoder.instr[4] top.cpu_tb.uut.uut_decoder.instr[3] top.cpu_tb.uut.uut_decoder.instr[2] top.cpu_tb.uut.uut_decoder.instr[1] top.cpu_tb.uut.uut_decoder.instr[0]
+#{top.cpu_tb.uut.uut_decoder.opcode[6:0]} top.cpu_tb.uut.uut_decoder.opcode[6] top.cpu_tb.uut.uut_decoder.opcode[5] top.cpu_tb.uut.uut_decoder.opcode[4] top.cpu_tb.uut.uut_decoder.opcode[3] top.cpu_tb.uut.uut_decoder.opcode[2] top.cpu_tb.uut.uut_decoder.opcode[1] top.cpu_tb.uut.uut_decoder.opcode[0]
+#{top.cpu_tb.uut.uut_decoder.rd[4:0]} top.cpu_tb.uut.uut_decoder.rd[4] top.cpu_tb.uut.uut_decoder.rd[3] top.cpu_tb.uut.uut_decoder.rd[2] top.cpu_tb.uut.uut_decoder.rd[1] top.cpu_tb.uut.uut_decoder.rd[0]
+#{top.cpu_tb.uut.uut_decoder.rs1[4:0]} top.cpu_tb.uut.uut_decoder.rs1[4] top.cpu_tb.uut.uut_decoder.rs1[3] top.cpu_tb.uut.uut_decoder.rs1[2] top.cpu_tb.uut.uut_decoder.rs1[1] top.cpu_tb.uut.uut_decoder.rs1[0]
+#{top.cpu_tb.uut.uut_decoder.rs2[4:0]} top.cpu_tb.uut.uut_decoder.rs2[4] top.cpu_tb.uut.uut_decoder.rs2[3] top.cpu_tb.uut.uut_decoder.rs2[2] top.cpu_tb.uut.uut_decoder.rs2[1] top.cpu_tb.uut.uut_decoder.rs2[0]
+@29
+#{top.cpu_tb.uut.uut_decoder.funct3[2:0]} top.cpu_tb.uut.uut_decoder.funct3[2] top.cpu_tb.uut.uut_decoder.funct3[1] top.cpu_tb.uut.uut_decoder.funct3[0]
 [pattern_trace] 1
 [pattern_trace] 0

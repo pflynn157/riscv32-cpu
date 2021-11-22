@@ -27,8 +27,8 @@ architecture Behavior of cpu_tb is
     constant SIZE : integer := 2;
     type instr_memory is array (0 to 1) of std_logic_vector(31 downto 0);
     signal memory : instr_memory := (
-        "000000000010" & "00000" & "000" & "00010" & "0010011",   -- ADDI X2, X0, 2
-        "000000000001" & "00000" & "000" & "00001" & "0010011"    -- ADDI X1, X0, 1
+        "000000000110" & "00000" & "000" & "00010" & "0010011",   -- ADDI X2, X0, 6
+        "000000000101" & "00000" & "000" & "00001" & "0010011"    -- ADDI X1, X0, 5
     );
 begin
     uut : CPU port map (
