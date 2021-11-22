@@ -4,9 +4,12 @@ use IEEE.numeric_std.all;
 
 entity CPU is
     port (
-        clk     : in std_logic;
-        I_instr : in std_logic_vector(31 downto 0);
-        O_PC    : out std_logic_vector(31 downto 0)
+        clk           : in std_logic;
+        I_instr       : in std_logic_vector(31 downto 0);
+        O_PC          : out std_logic_vector(31 downto 0);
+        O_Mem_Write   : out std_logic;
+        O_Mem_Address : out std_logic_vector(31 downto 0);
+        O_Mem_Data    : out std_logic_vector(31 downto 0)
     );
 end CPU;
 
@@ -64,7 +67,7 @@ architecture Behavior of CPU is
     signal UJ_imm : std_logic_vector(19 downto 0);
     
     -- Signals for the ALU component
-    signal A, B, Result : std_logic_vector(31 downto 0);
+    signal A, B, Result: std_logic_vector(31 downto 0);
     signal ALU_Op : std_logic_vector(2 downto 0);
     signal B_Inv, Zero : std_logic := '0';
     
@@ -75,12 +78,12 @@ architecture Behavior of CPU is
     
     -- Intermediate signals for the pipeline
     signal sel_D_1, sel_D_2 : std_logic_vector(4 downto 0);
-    signal srcImm, RegWrite : std_logic := '0';
+    signal srcImm, RegWrite, MemWrite : std_logic := '0';
     signal Imm_S2 : std_logic_vector(11 downto 0);
 
     -- Pipeline and program counter signals
     signal PC : std_logic_vector(31 downto 0) := X"00000000";
-    signal IF_stall : std_logic := '0';
+    signal IF_stall, MEM_stall : std_logic := '0';
 begin
     -- Connect the decoder
     uut_decoder : Decoder port map (
@@ -135,6 +138,7 @@ begin
                     sel_B <= rs2;
                     srcImm <= '0';
                     RegWrite <= '0';
+                    MemWrite <= '0';
                     
                     Imm_S2 <= Imm;
                     
@@ -146,11 +150,22 @@ begin
                             if opcode(5) = '0' then
                                 srcImm <= '1';
                             end if;
+                            
+                        -- Store instructions
+                        when "0100011" =>
+                            Imm_S2 <= Imm2 & Imm1;
+                            ALU_Op <= "000";
+                            sel_A <= rs2;
+                            sel_B <= rs1;
+                            srcImm <= '1';
+                            MemWrite <= '1';
+                            Mem_Stall <= '1';
                         
                         -- TODO: We should probably generate some sort of fault here...
                         when others =>
                     end case;
                     
+                    -- Check to see if we have a RAW dependency. If so, stall the pipeline
                     if rd = sel_A or rd = sel_B then
                         IF_stall <= '1';
                     end if;
@@ -169,7 +184,14 @@ begin
                     end if;
                 
                 -- Memory
-                elsif stage = 4 then
+                elsif stage = 4 and Mem_Stall = '0' then
+                    O_Mem_Write <= MemWrite;
+                    if MemWrite = '1' then
+                        O_Mem_Address <= Result;
+                        O_Mem_Data <= O_dataB;
+                    end if;
+                elsif stage = 4 and Mem_Stall = '1' then
+                    Mem_Stall <= '0';
                 
                 -- Write-back
                 elsif stage = 5 then
