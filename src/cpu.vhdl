@@ -5,6 +5,7 @@ use IEEE.numeric_std.all;
 entity CPU is
     port (
         clk           : in std_logic;
+        reset         : in std_logic;
         I_instr       : in std_logic_vector(31 downto 0);
         O_PC          : out std_logic_vector(31 downto 0);
         O_Mem_Write   : out std_logic;
@@ -78,8 +79,9 @@ architecture Behavior of CPU is
     
     -- Intermediate signals for the pipeline
     signal sel_D_1, sel_D_2 : std_logic_vector(4 downto 0);
-    signal srcImm, RegWrite, MemWrite : std_logic := '0';
+    signal srcImm, RegWrite, RegWrite2, MemWrite, MemWrite2 : std_logic := '0';
     signal Imm_S2 : std_logic_vector(11 downto 0);
+    signal MemData : std_logic_vector(31 downto 0);
 
     -- Pipeline and program counter signals
     signal PC : std_logic_vector(31 downto 0) := X"00000000";
@@ -125,6 +127,10 @@ begin
     process (clk)
     begin
         if rising_edge(clk) then
+            if reset = '1' then
+                O_Mem_Write <= '0';
+            end if;
+        
             for stage in 1 to 5 loop
                 -- Instruction fetch
                 if stage = 1 and IF_stall = '0' then
@@ -139,6 +145,7 @@ begin
                     srcImm <= '0';
                     RegWrite <= '0';
                     MemWrite <= '0';
+                    Mem_Stall <= '0';
                     
                     Imm_S2 <= Imm;
                     
@@ -166,8 +173,11 @@ begin
                     end case;
                     
                     -- Check to see if we have a RAW dependency. If so, stall the pipeline
-                    if rd = sel_A or rd = sel_B then
-                        IF_stall <= '1';
+                    if opcode = "0100011" then
+                    else
+                        if rd = sel_A or rd = sel_B then
+                            IF_stall <= '1';
+                        end if;
                     end if;
                 elsif stage = 2 and IF_stall = '1' then
                     IF_stall <= '0';
@@ -175,6 +185,9 @@ begin
                 -- Instruction execute
                 elsif stage = 3 then
                     sel_D_2 <= sel_D_1;
+                    MemWrite2 <= MemWrite;
+                    RegWrite2 <= RegWrite;
+                    MemData <= O_dataB;
                     
                     A <= O_dataA;
                     if srcImm = '1' then
@@ -185,17 +198,17 @@ begin
                 
                 -- Memory
                 elsif stage = 4 and Mem_Stall = '0' then
-                    O_Mem_Write <= MemWrite;
-                    if MemWrite = '1' then
+                    O_Mem_Write <= MemWrite2;
+                    if MemWrite2 = '1' then
                         O_Mem_Address <= Result;
-                        O_Mem_Data <= O_dataB;
+                        O_Mem_Data <= MemData;
                     end if;
                 elsif stage = 4 and Mem_Stall = '1' then
                     Mem_Stall <= '0';
                 
                 -- Write-back
                 elsif stage = 5 then
-                    if RegWrite = '1' then
+                    if RegWrite2 = '1' then
                         sel_D <= sel_D_2;
                         I_dataD <= Result;
                         I_enD <= '1';
