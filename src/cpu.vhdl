@@ -170,7 +170,6 @@ begin
                             ALU_op <= "000";
                             srcImm <= '1';
                             MemRead <= '1';
-                            Mem_Stall <= '1';
                             WB_Stall <= 2;
                             IF_stall <= '1';
                             RegWrite <= '1';
