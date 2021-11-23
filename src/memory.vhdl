@@ -25,9 +25,11 @@ begin
         variable word_indices : index_array;
     begin
         for i in 0 to 3 loop
-            I_address := std_logic_vector(unsigned(address) + i);
-            block_indices(i) := to_integer(unsigned(I_address(31 downto 4)));
-            word_indices(i) := to_integer(unsigned(I_address(3 downto 0)));
+            if not is_X(address) then
+                I_address := std_logic_vector(unsigned(address) + i);
+                block_indices(i) := to_integer(unsigned(I_address(31 downto 4)));
+                word_indices(i) := to_integer(unsigned(I_address(3 downto 0)));
+            end if;
         end loop;
         
         case data_len is
