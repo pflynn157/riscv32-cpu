@@ -15,9 +15,11 @@ architecture Behavior of cpu_tb is
             I_instr       : in std_logic_vector(31 downto 0);
             O_PC          : out std_logic_vector(31 downto 0);
             O_Mem_Write   : out std_logic;
+            O_Mem_Read    : out std_logic;
             O_Mem_Address : out std_logic_vector(31 downto 0);
             O_Mem_Data    : out std_logic_vector(31 downto 0);
-            O_Data_Len    : out std_logic_vector(1 downto 0)
+            O_Data_Len    : out std_logic_vector(1 downto 0);
+            I_Mem_Data    : in std_logic_vector(31 downto 0)
         );
     end component;
     
@@ -39,9 +41,9 @@ architecture Behavior of cpu_tb is
     
     -- The other signals
     signal Reset : std_logic := '0';
-    signal I_instr, O_PC, O_Mem_Address, O_Mem_Data : std_logic_vector(31 downto 0) := X"00000000";
+    signal I_instr, O_PC, O_Mem_Address, O_Mem_Data, I_Mem_Data : std_logic_vector(31 downto 0) := X"00000000";
     signal O_Data_Len : std_logic_vector(1 downto 0) := "00";
-    signal O_Mem_Write : std_logic := '0';
+    signal O_Mem_Write, O_Mem_Read : std_logic := '0';
     
     -- Memory signals
     signal I_write : std_logic := '0';
@@ -49,7 +51,7 @@ architecture Behavior of cpu_tb is
     signal address, I_data, O_data : std_logic_vector(31 downto 0) := X"00000000";
     
     -- Our test program
-    constant SIZE : integer := 10;
+    constant SIZE : integer := 12;
     type instr_memory is array (0 to (SIZE - 1)) of std_logic_vector(31 downto 0);
     signal rom_memory : instr_memory := (
         "000000000101" & "00000" & "000" & "00001" & "0010011",   -- ADDI X1, X0, 5
@@ -61,7 +63,9 @@ architecture Behavior of cpu_tb is
         "000000100000" & "00000" & "000" & "00010" & "0010011",   -- ADDI X2, X0, 32
         "000000010000" & "00000" & "000" & "00011" & "0010011",   -- ADDI X3, X0, 16
         "0000000" & "00011" & "00001" & "001" & "00000" & "0100011",  -- SH X1, [X3, 0]
-        "0000000" & "00010" & "00001" & "010" & "00000" & "0100011"   -- SW X1, [X2, 0]
+        "0000000" & "00010" & "00001" & "010" & "00000" & "0100011",  -- SW X1, [X2, 0]
+        "000000010000" & "00000" & "000" & "00011" & "0010011",        -- ADDI X3, X0, 16
+        "000000000000" & "00000" & "000" & "00010" & "0000011"        -- LB X2, [X0, 0]
     );
 begin
     uut : CPU port map (
@@ -70,9 +74,11 @@ begin
         I_instr => I_instr,
         O_PC => O_PC,
         O_Mem_Write => O_Mem_Write,
+        O_Mem_Read => O_Mem_Read,
         O_Mem_Address => O_Mem_Address,
         O_Mem_Data => O_Mem_Data,
-        O_Data_Len => O_Data_Len
+        O_Data_Len => O_Data_Len,
+        I_Mem_Data => I_Mem_Data
     );
     
     -- Connect memory
@@ -109,16 +115,20 @@ begin
             --end if;
         end loop;
         
+        I_instr <= X"00000000";
         Reset <= '1';
         wait;
     end process;
     
     -- This process handles the memory signals
-    mem_proc : process(O_Mem_Write, O_Mem_Address, O_Mem_Data)
+    mem_proc : process(O_Mem_Read, O_Mem_Write, O_Mem_Address, O_Mem_Data)
     begin
         I_write <= O_Mem_Write;
         Address <= O_Mem_Address;
         I_data <= O_Mem_Data;
         data_len <= O_Data_Len;
+        if O_Mem_Read = '1' then
+        I_Mem_Data <= O_Data;
+        end if;
     end process;
 end Behavior;

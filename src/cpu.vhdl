@@ -9,9 +9,11 @@ entity CPU is
         I_instr       : in std_logic_vector(31 downto 0);
         O_PC          : out std_logic_vector(31 downto 0);
         O_Mem_Write   : out std_logic;
+        O_Mem_Read    : out std_logic;
         O_Mem_Address : out std_logic_vector(31 downto 0);
         O_Mem_Data    : out std_logic_vector(31 downto 0);
-        O_Data_Len    : out std_logic_vector(1 downto 0)
+        O_Data_Len    : out std_logic_vector(1 downto 0);
+        I_Mem_Data    : in std_logic_vector(31 downto 0)
     );
 end CPU;
 
@@ -81,13 +83,14 @@ architecture Behavior of CPU is
     -- Intermediate signals for the pipeline
     signal sel_D_1, sel_D_2 : std_logic_vector(4 downto 0);
     signal srcImm, RegWrite, RegWrite2, MemWrite, MemWrite2 : std_logic := '0';
+    signal MemRead, MemRead2 : std_logic := '0';
     signal Imm_S2 : std_logic_vector(11 downto 0);
     signal MemData : std_logic_vector(31 downto 0);
     signal Data_Len, Data_Len2 : std_logic_vector(1 downto 0);
 
     -- Pipeline and program counter signals
     signal PC : std_logic_vector(31 downto 0) := X"00000000";
-    signal IF_stall, MEM_stall : std_logic := '0';
+    signal IF_stall, MEM_stall, WB_stall, WB_stall2 : std_logic := '0';
 begin
     -- Connect the decoder
     uut_decoder : Decoder port map (
@@ -160,6 +163,21 @@ begin
                                 srcImm <= '1';
                             end if;
                             
+                        -- Load instructions
+                        when "0000011" =>
+                            ALU_op <= "000";
+                            srcImm <= '1';
+                            MemRead <= '1';
+                            Mem_Stall <= '1';
+                            WB_Stall <= '1';
+                            RegWrite <= '1';
+                            case funct3 is
+                                when "000" => Data_Len <= "00";
+                                when "001" => Data_Len <= "01";
+                                when "010" => Data_Len <= "11";
+                                when others => Data_Len <= "00";
+                            end case;
+                            
                         -- Store instructions
                         when "0100011" =>
                             Imm_S2 <= Imm2 & Imm1;
@@ -182,6 +200,8 @@ begin
                     
                     -- Check to see if we have a RAW dependency. If so, stall the pipeline
                     if opcode = "0100011" then
+                    elsif opcode = "0000011" then
+                    elsif opcode = "0000000" then
                     else
                         if rd = sel_A or rd = sel_B then
                             IF_stall <= '1';
@@ -194,9 +214,11 @@ begin
                 elsif stage = 3 then
                     sel_D_2 <= sel_D_1;
                     MemWrite2 <= MemWrite;
+                    MemRead2 <= MemRead;
                     RegWrite2 <= RegWrite;
                     MemData <= O_dataB;
                     Data_Len2 <= Data_Len;
+                    WB_Stall2 <= WB_Stall;
                     
                     A <= O_dataA;
                     if srcImm = '1' then
@@ -208,26 +230,36 @@ begin
                 -- Memory
                 elsif stage = 4 and Mem_Stall = '0' then
                     O_Mem_Write <= MemWrite2;
+                    O_Mem_Read <= MemRead2;
+                    O_Mem_Address <= Result;
+                    O_Data_Len <= Data_Len2;
+                    
                     if MemWrite2 = '1' then
-                        O_Mem_Address <= Result;
                         O_Mem_Data <= MemData;
-                        O_Data_Len <= Data_Len2;
                     end if;
                 elsif stage = 4 and Mem_Stall = '1' then
                     Mem_Stall <= '0';
                 
                 -- Write-back
-                elsif stage = 5 then
+                elsif stage = 5 and WB_Stall2 = '0' then
                     if RegWrite2 = '1' then
                         sel_D <= sel_D_2;
-                        I_dataD <= Result;
                         I_enD <= '1';
+                        
+                        if MemRead2 = '1' then
+                            I_dataD <= I_Mem_Data;
+                        else
+                            I_dataD <= Result;
+                        end if;
                     else
                         I_enD <= '0';
                     end if;
                     
                     -- Prepare for instrution fetch on next cycle
                     O_PC <= PC;
+                elsif stage = 5 and WB_Stall2 ='1' then
+                    WB_Stall2 <= '0';
+                    WB_Stall <= '0';
                 end if;
             end loop;
         end if;

@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.108 (w)1999-2020 BSI
-[*] Tue Nov 23 00:36:38 2021
+[*] Tue Nov 23 01:37:12 2021
 [*]
 [dumpfile] "/home/patrick/Projects_Github/riscv32-cpu/sim/cpu_tb.ghw"
-[dumpfile_mtime] "Tue Nov 23 00:36:24 2021"
-[dumpfile_size] 2094865
+[dumpfile_mtime] "Tue Nov 23 01:35:52 2021"
+[dumpfile_size] 2095811
 [savefile] "/home/patrick/Projects_Github/riscv32-cpu/cpu.gtkw"
 [timestart] 0
-[size] 1920 998
+[size] 1920 1033
 [pos] -1 -1
-*-25.300417 130300000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-24.715456 165000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
 [treeopen] top.cpu_tb.
 [treeopen] top.cpu_tb.mem_uut.mem.[0].
@@ -17,12 +17,11 @@
 [treeopen] top.cpu_tb.mem_uut.mem.[2].
 [treeopen] top.cpu_tb.uut.
 [sst_width] 238
-[signals_width] 204
+[signals_width] 222
 [sst_expanded] 1
-[sst_vpaned_height] 324
+[sst_vpaned_height] 336
 @28
 top.cpu_tb.clk
-@29
 top.cpu_tb.reset
 @22
 #{top.cpu_tb.i_instr[31:0]} top.cpu_tb.i_instr[31] top.cpu_tb.i_instr[30] top.cpu_tb.i_instr[29] top.cpu_tb.i_instr[28] top.cpu_tb.i_instr[27] top.cpu_tb.i_instr[26] top.cpu_tb.i_instr[25] top.cpu_tb.i_instr[24] top.cpu_tb.i_instr[23] top.cpu_tb.i_instr[22] top.cpu_tb.i_instr[21] top.cpu_tb.i_instr[20] top.cpu_tb.i_instr[19] top.cpu_tb.i_instr[18] top.cpu_tb.i_instr[17] top.cpu_tb.i_instr[16] top.cpu_tb.i_instr[15] top.cpu_tb.i_instr[14] top.cpu_tb.i_instr[13] top.cpu_tb.i_instr[12] top.cpu_tb.i_instr[11] top.cpu_tb.i_instr[10] top.cpu_tb.i_instr[9] top.cpu_tb.i_instr[8] top.cpu_tb.i_instr[7] top.cpu_tb.i_instr[6] top.cpu_tb.i_instr[5] top.cpu_tb.i_instr[4] top.cpu_tb.i_instr[3] top.cpu_tb.i_instr[2] top.cpu_tb.i_instr[1] top.cpu_tb.i_instr[0]
@@ -30,8 +29,15 @@ top.cpu_tb.reset
 @28
 top.cpu_tb.uut.regwrite
 top.cpu_tb.uut.mem_stall
+top.cpu_tb.uut.wb_stall
 top.cpu_tb.uut.if_stall
+@29
+top.cpu_tb.uut.memread2
+@28
 top.cpu_tb.o_mem_write
+top.cpu_tb.uut.o_mem_read
+@22
+#{top.cpu_tb.uut.i_mem_data[31:0]} top.cpu_tb.uut.i_mem_data[31] top.cpu_tb.uut.i_mem_data[30] top.cpu_tb.uut.i_mem_data[29] top.cpu_tb.uut.i_mem_data[28] top.cpu_tb.uut.i_mem_data[27] top.cpu_tb.uut.i_mem_data[26] top.cpu_tb.uut.i_mem_data[25] top.cpu_tb.uut.i_mem_data[24] top.cpu_tb.uut.i_mem_data[23] top.cpu_tb.uut.i_mem_data[22] top.cpu_tb.uut.i_mem_data[21] top.cpu_tb.uut.i_mem_data[20] top.cpu_tb.uut.i_mem_data[19] top.cpu_tb.uut.i_mem_data[18] top.cpu_tb.uut.i_mem_data[17] top.cpu_tb.uut.i_mem_data[16] top.cpu_tb.uut.i_mem_data[15] top.cpu_tb.uut.i_mem_data[14] top.cpu_tb.uut.i_mem_data[13] top.cpu_tb.uut.i_mem_data[12] top.cpu_tb.uut.i_mem_data[11] top.cpu_tb.uut.i_mem_data[10] top.cpu_tb.uut.i_mem_data[9] top.cpu_tb.uut.i_mem_data[8] top.cpu_tb.uut.i_mem_data[7] top.cpu_tb.uut.i_mem_data[6] top.cpu_tb.uut.i_mem_data[5] top.cpu_tb.uut.i_mem_data[4] top.cpu_tb.uut.i_mem_data[3] top.cpu_tb.uut.i_mem_data[2] top.cpu_tb.uut.i_mem_data[1] top.cpu_tb.uut.i_mem_data[0]
 @200
 -
 @22
