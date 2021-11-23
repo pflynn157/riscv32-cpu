@@ -51,7 +51,7 @@ architecture Behavior of cpu_tb is
     signal address, I_data, O_data : std_logic_vector(31 downto 0) := X"00000000";
     
     -- Our test program
-    constant SIZE : integer := 12;
+    constant SIZE : integer := 13;
     type instr_memory is array (0 to (SIZE - 1)) of std_logic_vector(31 downto 0);
     signal rom_memory : instr_memory := (
         "000000000101" & "00000" & "000" & "00001" & "0010011",   -- ADDI X1, X0, 5
@@ -65,7 +65,8 @@ architecture Behavior of cpu_tb is
         "0000000" & "00011" & "00001" & "001" & "00000" & "0100011",  -- SH X1, [X3, 0]
         "0000000" & "00010" & "00001" & "010" & "00000" & "0100011",  -- SW X1, [X2, 0]
         "000000010000" & "00000" & "000" & "00011" & "0010011",        -- ADDI X3, X0, 16
-        "000000000000" & "00000" & "000" & "00010" & "0000011"        -- LB X2, [X0, 0]
+        "000000000000" & "00000" & "000" & "00010" & "0000011",       -- LB X2, [X0, 0]
+        "000000000111" & "00000" & "000" & "00001" & "0010011"        -- ADDI X1, X0, 7
     );
 begin
     uut : CPU port map (
@@ -107,12 +108,12 @@ begin
         wait until O_PC'event;
         
         for i in 1 to SIZE loop
-            --if to_integer(unsigned(O_PC)) < SIZE then
+            if to_integer(unsigned(O_PC)) < SIZE then
                 I_instr <= rom_memory(to_integer(unsigned(O_PC)));
                 wait until O_PC'event;
-            --else
-            --    Reset <= '1';
-            --end if;
+            else
+                Reset <= '1';
+            end if;
         end loop;
         
         I_instr <= X"00000000";
@@ -121,14 +122,14 @@ begin
     end process;
     
     -- This process handles the memory signals
-    mem_proc : process(O_Mem_Read, O_Mem_Write, O_Mem_Address, O_Mem_Data)
+    mem_proc : process(O_Mem_Read, O_Mem_Write, O_Mem_Address, O_Mem_Data, O_Data)
     begin
         I_write <= O_Mem_Write;
         Address <= O_Mem_Address;
         I_data <= O_Mem_Data;
         data_len <= O_Data_Len;
         if O_Mem_Read = '1' then
-        I_Mem_Data <= O_Data;
+            I_Mem_Data <= O_Data;
         end if;
     end process;
 end Behavior;

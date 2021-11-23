@@ -90,7 +90,8 @@ architecture Behavior of CPU is
 
     -- Pipeline and program counter signals
     signal PC : std_logic_vector(31 downto 0) := X"00000000";
-    signal IF_stall, MEM_stall, WB_stall, WB_stall2 : std_logic := '0';
+    signal IF_stall, MEM_stall : std_logic := '0';
+    signal WB_stall : integer := 0;
 begin
     -- Connect the decoder
     uut_decoder : Decoder port map (
@@ -151,6 +152,7 @@ begin
                     RegWrite <= '0';
                     MemWrite <= '0';
                     Mem_Stall <= '0';
+                    MemRead <= '0';
                     
                     Imm_S2 <= Imm;
                     
@@ -169,7 +171,8 @@ begin
                             srcImm <= '1';
                             MemRead <= '1';
                             Mem_Stall <= '1';
-                            WB_Stall <= '1';
+                            WB_Stall <= 2;
+                            IF_stall <= '1';
                             RegWrite <= '1';
                             case funct3 is
                                 when "000" => Data_Len <= "00";
@@ -218,7 +221,6 @@ begin
                     RegWrite2 <= RegWrite;
                     MemData <= O_dataB;
                     Data_Len2 <= Data_Len;
-                    WB_Stall2 <= WB_Stall;
                     
                     A <= O_dataA;
                     if srcImm = '1' then
@@ -241,7 +243,7 @@ begin
                     Mem_Stall <= '0';
                 
                 -- Write-back
-                elsif stage = 5 and WB_Stall2 = '0' then
+                elsif stage = 5 and WB_Stall = 0 then
                     if RegWrite2 = '1' then
                         sel_D <= sel_D_2;
                         I_enD <= '1';
@@ -257,9 +259,8 @@ begin
                     
                     -- Prepare for instrution fetch on next cycle
                     O_PC <= PC;
-                elsif stage = 5 and WB_Stall2 ='1' then
-                    WB_Stall2 <= '0';
-                    WB_Stall <= '0';
+                elsif stage = 5 and WB_Stall > 0 then
+                    WB_Stall <= WB_stall - 1;
                 end if;
             end loop;
         end if;
