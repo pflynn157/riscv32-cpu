@@ -16,7 +16,8 @@ architecture Behavior of cpu_tb is
             O_PC          : out std_logic_vector(31 downto 0);
             O_Mem_Write   : out std_logic;
             O_Mem_Address : out std_logic_vector(31 downto 0);
-            O_Mem_Data    : out std_logic_vector(31 downto 0)
+            O_Mem_Data    : out std_logic_vector(31 downto 0);
+            O_Data_Len    : out std_logic_vector(1 downto 0)
         );
     end component;
     
@@ -39,6 +40,7 @@ architecture Behavior of cpu_tb is
     -- The other signals
     signal Reset : std_logic := '0';
     signal I_instr, O_PC, O_Mem_Address, O_Mem_Data : std_logic_vector(31 downto 0) := X"00000000";
+    signal O_Data_Len : std_logic_vector(1 downto 0) := "00";
     signal O_Mem_Write : std_logic := '0';
     
     -- Memory signals
@@ -53,7 +55,7 @@ architecture Behavior of cpu_tb is
         "000000000101" & "00000" & "000" & "00001" & "0010011",   -- ADDI X1, X0, 5
         "000000000110" & "00000" & "000" & "00010" & "0010011",   -- ADDI X2, X0, 6
         "000000001010" & "00010" & "000" & "00011" & "0010011",   -- ADDI X3, X2, 10
-        "000000000100" & "00000" & "000" & "00001" & "0010011",   -- ADDI X1, X0, 4
+        "011011110100" & "00000" & "000" & "00001" & "0010011",   -- ADDI X1, X0, 0x6F4
         "000000000110" & "00000" & "000" & "00010" & "0010011",   -- ADDI X2, X0, 6
         "0000000" & "00000" & "00001" & "000" & "00000" & "0100011",   -- SB X1, [X0, 0]
         "000000100000" & "00000" & "000" & "00010" & "0010011",   -- ADDI X2, X0, 32
@@ -69,7 +71,8 @@ begin
         O_PC => O_PC,
         O_Mem_Write => O_Mem_Write,
         O_Mem_Address => O_Mem_Address,
-        O_Mem_Data => O_Mem_Data
+        O_Mem_Data => O_Mem_Data,
+        O_Data_Len => O_Data_Len
     );
     
     -- Connect memory
@@ -116,5 +119,6 @@ begin
         I_write <= O_Mem_Write;
         Address <= O_Mem_Address;
         I_data <= O_Mem_Data;
+        data_len <= O_Data_Len;
     end process;
 end Behavior;
