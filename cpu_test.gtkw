@@ -1,10 +1,10 @@
 [*]
 [*] GTKWave Analyzer v3.3.109 (w)1999-2020 BSI
-[*] Mon Dec  6 12:26:33 2021
+[*] Mon Dec  6 12:35:11 2021
 [*]
 [dumpfile] "/home/patrick/Projects/riscv32-cpu/sim/cpu_test.ghw"
-[dumpfile_mtime] "Mon Dec  6 12:24:10 2021"
-[dumpfile_size] 2092384
+[dumpfile_mtime] "Mon Dec  6 12:35:00 2021"
+[dumpfile_size] 2093030
 [savefile] "/home/patrick/Projects/riscv32-cpu/cpu_test.gtkw"
 [timestart] 0
 [size] 1920 1052

@@ -120,7 +120,7 @@ begin
         end Reg_Check;
     begin
         -- Reset the CPU
-        CPU_Reset;
+        --CPU_Reset;
         
         I_instr <= rom_memory1(0);
         wait until O_PC'event;
@@ -130,6 +130,7 @@ begin
                 wait until O_PC'event;
             end if;
         end loop;
+        wait for clk_period * 4;
         
         -- Enter debug mode
         En_Debug <= '1';
