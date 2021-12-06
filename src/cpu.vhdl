@@ -13,7 +13,10 @@ entity CPU is
         O_Mem_Address : out std_logic_vector(31 downto 0);
         O_Mem_Data    : out std_logic_vector(31 downto 0);
         O_Data_Len    : out std_logic_vector(1 downto 0);
-        I_Mem_Data    : in std_logic_vector(31 downto 0)
+        I_Mem_Data    : in std_logic_vector(31 downto 0);
+        En_Debug      : in std_logic;                        -- Enables debug for automated testing
+        DB_Reg_Sel    : in std_logic_vector(4 downto 0);     -- Select the register
+        DB_Data       : out std_logic_vector(31 downto 0)    -- Output the debug data
     );
 end CPU;
 
@@ -132,7 +135,13 @@ begin
 
     process (clk)
     begin
-        if rising_edge(clk) then
+        -- Debug time!
+        if rising_edge(clk) and En_Debug = '1' then
+            sel_A <= DB_Reg_Sel;
+            DB_Data <= O_dataA;
+        
+        -- The main CPU
+        elsif rising_edge(clk) and En_Debug = '0' then
             if reset = '1' then
                 O_Mem_Write <= '0';
             end if;

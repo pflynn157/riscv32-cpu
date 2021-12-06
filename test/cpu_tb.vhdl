@@ -19,7 +19,10 @@ architecture Behavior of cpu_tb is
             O_Mem_Address : out std_logic_vector(31 downto 0);
             O_Mem_Data    : out std_logic_vector(31 downto 0);
             O_Data_Len    : out std_logic_vector(1 downto 0);
-            I_Mem_Data    : in std_logic_vector(31 downto 0)
+            I_Mem_Data    : in std_logic_vector(31 downto 0);
+            En_Debug      : in std_logic;
+            DB_Reg_Sel    : in std_logic_vector(4 downto 0);
+            DB_Data       : out std_logic_vector(31 downto 0)
         );
     end component;
     
@@ -44,6 +47,11 @@ architecture Behavior of cpu_tb is
     signal I_instr, O_PC, O_Mem_Address, O_Mem_Data, I_Mem_Data : std_logic_vector(31 downto 0) := X"00000000";
     signal O_Data_Len : std_logic_vector(1 downto 0) := "00";
     signal O_Mem_Write, O_Mem_Read : std_logic := '0';
+    
+    -- Debug signals
+    signal En_Debug : std_logic := '0';
+    signal DB_Reg_Sel : std_logic_vector(4 downto 0) := "00000";
+    signal DB_Data : std_logic_vector(31 downto 0) := X"00000000";
     
     -- Memory signals
     signal I_write : std_logic := '0';
@@ -79,7 +87,10 @@ begin
         O_Mem_Address => O_Mem_Address,
         O_Mem_Data => O_Mem_Data,
         O_Data_Len => O_Data_Len,
-        I_Mem_Data => I_Mem_Data
+        I_Mem_Data => I_Mem_Data,
+        En_Debug => En_Debug,
+        DB_Reg_Sel => DB_Reg_Sel,
+        DB_Data => DB_Data
     );
     
     -- Connect memory
@@ -116,8 +127,16 @@ begin
             end if;
         end loop;
         
+        -- Reset the CPU
         I_instr <= X"00000000";
         Reset <= '1';
+        
+        -- Enter debug mode
+        En_Debug <= '1';
+        DB_Reg_Sel <= "00000";
+        wait for clk_period * 2;
+        assert DB_data = X"00000000" report "Debug failed-> Invalid register X0" severity error;
+        
         wait;
     end process;
     
