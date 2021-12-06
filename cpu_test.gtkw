@@ -1,0 +1,37 @@
+[*]
+[*] GTKWave Analyzer v3.3.109 (w)1999-2020 BSI
+[*] Mon Dec  6 12:26:33 2021
+[*]
+[dumpfile] "/home/patrick/Projects/riscv32-cpu/sim/cpu_test.ghw"
+[dumpfile_mtime] "Mon Dec  6 12:24:10 2021"
+[dumpfile_size] 2092384
+[savefile] "/home/patrick/Projects/riscv32-cpu/cpu_test.gtkw"
+[timestart] 0
+[size] 1920 1052
+[pos] -1 -1
+*-24.659904 25000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[treeopen] top.cpu_tb1.
+[sst_width] 219
+[signals_width] 150
+[sst_expanded] 1
+[sst_vpaned_height] 319
+@28
+top.cpu_tb1.clk
+top.cpu_tb1.reset
+@22
+#{top.cpu_tb1.i_data[31:0]} top.cpu_tb1.i_data[31] top.cpu_tb1.i_data[30] top.cpu_tb1.i_data[29] top.cpu_tb1.i_data[28] top.cpu_tb1.i_data[27] top.cpu_tb1.i_data[26] top.cpu_tb1.i_data[25] top.cpu_tb1.i_data[24] top.cpu_tb1.i_data[23] top.cpu_tb1.i_data[22] top.cpu_tb1.i_data[21] top.cpu_tb1.i_data[20] top.cpu_tb1.i_data[19] top.cpu_tb1.i_data[18] top.cpu_tb1.i_data[17] top.cpu_tb1.i_data[16] top.cpu_tb1.i_data[15] top.cpu_tb1.i_data[14] top.cpu_tb1.i_data[13] top.cpu_tb1.i_data[12] top.cpu_tb1.i_data[11] top.cpu_tb1.i_data[10] top.cpu_tb1.i_data[9] top.cpu_tb1.i_data[8] top.cpu_tb1.i_data[7] top.cpu_tb1.i_data[6] top.cpu_tb1.i_data[5] top.cpu_tb1.i_data[4] top.cpu_tb1.i_data[3] top.cpu_tb1.i_data[2] top.cpu_tb1.i_data[1] top.cpu_tb1.i_data[0]
+@28
+top.cpu_tb1.en_debug
+@22
+#{top.cpu_tb1.db_reg_sel[4:0]} top.cpu_tb1.db_reg_sel[4] top.cpu_tb1.db_reg_sel[3] top.cpu_tb1.db_reg_sel[2] top.cpu_tb1.db_reg_sel[1] top.cpu_tb1.db_reg_sel[0]
+#{top.cpu_tb1.db_data[31:0]} top.cpu_tb1.db_data[31] top.cpu_tb1.db_data[30] top.cpu_tb1.db_data[29] top.cpu_tb1.db_data[28] top.cpu_tb1.db_data[27] top.cpu_tb1.db_data[26] top.cpu_tb1.db_data[25] top.cpu_tb1.db_data[24] top.cpu_tb1.db_data[23] top.cpu_tb1.db_data[22] top.cpu_tb1.db_data[21] top.cpu_tb1.db_data[20] top.cpu_tb1.db_data[19] top.cpu_tb1.db_data[18] top.cpu_tb1.db_data[17] top.cpu_tb1.db_data[16] top.cpu_tb1.db_data[15] top.cpu_tb1.db_data[14] top.cpu_tb1.db_data[13] top.cpu_tb1.db_data[12] top.cpu_tb1.db_data[11] top.cpu_tb1.db_data[10] top.cpu_tb1.db_data[9] top.cpu_tb1.db_data[8] top.cpu_tb1.db_data[7] top.cpu_tb1.db_data[6] top.cpu_tb1.db_data[5] top.cpu_tb1.db_data[4] top.cpu_tb1.db_data[3] top.cpu_tb1.db_data[2] top.cpu_tb1.db_data[1] top.cpu_tb1.db_data[0]
+@23
+#{top.cpu_tb1.o_pc[31:0]} top.cpu_tb1.o_pc[31] top.cpu_tb1.o_pc[30] top.cpu_tb1.o_pc[29] top.cpu_tb1.o_pc[28] top.cpu_tb1.o_pc[27] top.cpu_tb1.o_pc[26] top.cpu_tb1.o_pc[25] top.cpu_tb1.o_pc[24] top.cpu_tb1.o_pc[23] top.cpu_tb1.o_pc[22] top.cpu_tb1.o_pc[21] top.cpu_tb1.o_pc[20] top.cpu_tb1.o_pc[19] top.cpu_tb1.o_pc[18] top.cpu_tb1.o_pc[17] top.cpu_tb1.o_pc[16] top.cpu_tb1.o_pc[15] top.cpu_tb1.o_pc[14] top.cpu_tb1.o_pc[13] top.cpu_tb1.o_pc[12] top.cpu_tb1.o_pc[11] top.cpu_tb1.o_pc[10] top.cpu_tb1.o_pc[9] top.cpu_tb1.o_pc[8] top.cpu_tb1.o_pc[7] top.cpu_tb1.o_pc[6] top.cpu_tb1.o_pc[5] top.cpu_tb1.o_pc[4] top.cpu_tb1.o_pc[3] top.cpu_tb1.o_pc[2] top.cpu_tb1.o_pc[1] top.cpu_tb1.o_pc[0]
+@200
+-
+@22
+#{top.cpu_tb1.uut.uut_registers.sel_a[4:0]} top.cpu_tb1.uut.uut_registers.sel_a[4] top.cpu_tb1.uut.uut_registers.sel_a[3] top.cpu_tb1.uut.uut_registers.sel_a[2] top.cpu_tb1.uut.uut_registers.sel_a[1] top.cpu_tb1.uut.uut_registers.sel_a[0]
+#{top.cpu_tb1.uut.uut_registers.o_dataa[31:0]} top.cpu_tb1.uut.uut_registers.o_dataa[31] top.cpu_tb1.uut.uut_registers.o_dataa[30] top.cpu_tb1.uut.uut_registers.o_dataa[29] top.cpu_tb1.uut.uut_registers.o_dataa[28] top.cpu_tb1.uut.uut_registers.o_dataa[27] top.cpu_tb1.uut.uut_registers.o_dataa[26] top.cpu_tb1.uut.uut_registers.o_dataa[25] top.cpu_tb1.uut.uut_registers.o_dataa[24] top.cpu_tb1.uut.uut_registers.o_dataa[23] top.cpu_tb1.uut.uut_registers.o_dataa[22] top.cpu_tb1.uut.uut_registers.o_dataa[21] top.cpu_tb1.uut.uut_registers.o_dataa[20] top.cpu_tb1.uut.uut_registers.o_dataa[19] top.cpu_tb1.uut.uut_registers.o_dataa[18] top.cpu_tb1.uut.uut_registers.o_dataa[17] top.cpu_tb1.uut.uut_registers.o_dataa[16] top.cpu_tb1.uut.uut_registers.o_dataa[15] top.cpu_tb1.uut.uut_registers.o_dataa[14] top.cpu_tb1.uut.uut_registers.o_dataa[13] top.cpu_tb1.uut.uut_registers.o_dataa[12] top.cpu_tb1.uut.uut_registers.o_dataa[11] top.cpu_tb1.uut.uut_registers.o_dataa[10] top.cpu_tb1.uut.uut_registers.o_dataa[9] top.cpu_tb1.uut.uut_registers.o_dataa[8] top.cpu_tb1.uut.uut_registers.o_dataa[7] top.cpu_tb1.uut.uut_registers.o_dataa[6] top.cpu_tb1.uut.uut_registers.o_dataa[5] top.cpu_tb1.uut.uut_registers.o_dataa[4] top.cpu_tb1.uut.uut_registers.o_dataa[3] top.cpu_tb1.uut.uut_registers.o_dataa[2] top.cpu_tb1.uut.uut_registers.o_dataa[1] top.cpu_tb1.uut.uut_registers.o_dataa[0]
+[pattern_trace] 1
+[pattern_trace] 0

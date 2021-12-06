@@ -143,6 +143,8 @@ begin
         -- The main CPU
         elsif rising_edge(clk) and En_Debug = '0' then
             if reset = '1' then
+                PC <= X"00000000";
+                O_PC <= PC;
                 O_Mem_Write <= '0';
             end if;
         

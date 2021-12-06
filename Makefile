@@ -9,7 +9,8 @@ SIMDIR		= sim
 SIMFILES	= test/decoder_tb.vhdl \
            test/mem_tb.vhdl \
            test/instr_memory_tb.vhdl \
-           test/cpu_tb.vhdl
+           test/cpu_tb.vhdl \
+           test/cpu_tb1.vhdl
 
 # GHDL
 GHDL_CMD	= ghdl
@@ -33,14 +34,19 @@ compile:
 	ghdl -e -o sim/mem_tb $(GHDL_FLAGS) $(GHDL_WORKDIR) mem_tb
 	ghdl -e -o sim/instr_memory_tb $(GHDL_FLAGS) $(GHDL_WORKDIR) instr_memory_tb
 	ghdl -e -o sim/cpu_tb $(GHDL_FLAGS) $(GHDL_WORKDIR) cpu_tb
+	ghdl -e -o sim/cpu_tb1 $(GHDL_FLAGS) $(GHDL_WORKDIR) cpu_tb1
 
 run:
 	cd sim; \
 	ghdl -r $(GHDL_FLAGS) cpu_tb $(GHDL_STOP) --wave=cpu_tb.ghw; \
+	ghdl -r $(GHDL_FLAGS) cpu_tb1 $(GHDL_STOP) --wave=cpu_test.ghw; \
 	cd ..
 
 view:
 	gtkwave sim/cpu_tb.ghw
+	
+test_view:
+	gtkwave sim/cpu_test.ghw
 
 clean:
 	$(GHDL_CMD) --clean --workdir=sim
