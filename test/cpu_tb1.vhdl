@@ -112,11 +112,11 @@ begin
             wait for clk_period * 3;
         end CPU_Reset;
         
-        procedure Reg_Check(DB_Reg : in std_logic_vector(4 downto 0); Exp_Data : in std_logic_vector(31 downto 0)) is
+        procedure Reg_Check(DB_Reg : in std_logic_vector(4 downto 0); Exp_Data : in std_logic_vector(31 downto 0); message : String) is
         begin
             DB_Reg_Sel <= DB_Reg;
             wait for clk_period * 2;
-            assert DB_data = Exp_Data report "Debug failed-> Invalid register" severity warning;
+            assert DB_data = Exp_Data report message severity warning;
         end Reg_Check;
     begin
         -- Reset the CPU
@@ -134,11 +134,12 @@ begin
         
         -- Enter debug mode
         En_Debug <= '1';
-        Reg_Check("00000", X"00000000");
-        Reg_Check("00001", X"00000005");
-        Reg_Check("00010", X"00000006");
+        Reg_Check("00000", X"00000000", "Debug failed-> Invalid register X0");
+        Reg_Check("00001", X"00000005", "Debug failed-> Invalid register X1");
+        Reg_Check("00010", X"00000006", "Debug failed-> Invalid register X2");
         
         -- Reset the CPU
+        En_Debug <= '0';
         CPU_Reset;
         
         wait;

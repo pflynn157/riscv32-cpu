@@ -139,15 +139,15 @@ begin
         if rising_edge(clk) and En_Debug = '1' then
             sel_A <= DB_Reg_Sel;
             DB_Data <= O_dataA;
-        
+            
+        -- Reset
+        elsif rising_edge(clk) and Reset = '1' then
+            PC <= X"00000000";
+            O_PC <= PC;
+            O_Mem_Write <= '0';
+            
         -- The main CPU
         elsif rising_edge(clk) and En_Debug = '0' then
-            if reset = '1' then
-                PC <= X"00000000";
-                O_PC <= PC;
-                O_Mem_Write <= '0';
-            end if;
-        
             for stage in 1 to 5 loop
                 -- Instruction fetch
                 if stage = 1 and IF_stall = '0' then
