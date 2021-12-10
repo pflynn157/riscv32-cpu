@@ -75,7 +75,7 @@ architecture Behavior of CPU is
     
     -- Signals for the ALU component
     signal A, B, Result: std_logic_vector(31 downto 0);
-    signal ALU_Op : std_logic_vector(2 downto 0);
+    signal ALU_Op, ALU_Op1 : std_logic_vector(2 downto 0);
     signal B_Inv, Zero : std_logic := '0';
     
     -- Signals for the register file component
@@ -170,7 +170,7 @@ begin
                     case opcode is
                         -- ALU instructions
                         when "0010011" | "0110011" =>
-                            ALU_op <= funct3;
+                            ALU_op1 <= funct3;
                             RegWrite <= '1';
                             if opcode(5) = '0' then
                                 srcImm <= '1';
@@ -178,7 +178,7 @@ begin
                             
                         -- Load instructions
                         when "0000011" =>
-                            ALU_op <= "000";
+                            ALU_op1 <= "000";
                             srcImm <= '1';
                             MemRead <= '1';
                             WB_Stall <= 2;
@@ -194,7 +194,7 @@ begin
                         -- Store instructions
                         when "0100011" =>
                             Imm_S2 <= Imm2 & Imm1;
-                            ALU_Op <= "000";
+                            ALU_Op1 <= "000";
                             sel_A <= rs2;
                             sel_B <= rs1;
                             srcImm <= '1';
@@ -226,6 +226,7 @@ begin
                 -- Instruction execute
                 elsif stage = 3 then
                     sel_D_2 <= sel_D_1;
+                    ALU_Op <= ALU_Op1;
                     MemWrite2 <= MemWrite;
                     MemRead2 <= MemRead;
                     RegWrite2 <= RegWrite;

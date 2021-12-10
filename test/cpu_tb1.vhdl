@@ -58,13 +58,31 @@ architecture Behavior of cpu_tb1 is
     signal data_len : std_logic_vector(1 downto 0) := "00";
     signal address, I_data, O_data : std_logic_vector(31 downto 0) := X"00000000";
     
-    -- Our test program
+    -- Opcodes
+    constant ALU_I_OP : std_logic_vector := "0010011";
+    constant ALU_ADD : std_logic_vector := "000";
+    constant ALU_XOR : std_logic_vector := "100";
+    constant ALU_OR  : std_logic_vector := "110";
+    constant ALU_AND : std_logic_vector := "111";
+    
+    -- Our test programs
     constant SIZE1 : integer := 3;
     type instr_memory1 is array (0 to (SIZE1 - 1)) of std_logic_vector(31 downto 0);
     signal rom_memory1 : instr_memory1 := (
-        "000000000101" & "00000" & "000" & "00001" & "0010011",   -- ADDI X1, X0, 5
-        "000000000110" & "00000" & "000" & "00010" & "0010011",   -- ADDI X2, X0, 6
-        "000000001010" & "00010" & "000" & "00011" & "0010011"    -- ADDI X3, X2, 10
+        "000000000101" & "00000" & ALU_ADD & "00001" & ALU_I_OP,   -- ADDI X1, X0, 5
+        "000000000110" & "00000" & ALU_ADD & "00010" & ALU_I_OP,   -- ADDI X2, X0, 6
+        "000000001010" & "00010" & ALU_ADD & "00011" & ALU_I_OP    -- ADDI X3, X2, 10
+    );
+    
+    -- Register contents:
+    -- X1: 5 | X2: 6 | X3: 16
+    
+    constant SIZE2 : integer := 3;
+    type instr_memory2 is array (0 to (SIZE2 - 1)) of std_logic_vector(31 downto 0);
+    signal rom_memory2 : instr_memory2 := (
+        "000000000011" & "00001" & ALU_XOR & "00100" & ALU_I_OP,   -- XORI X4, X1, 3 == 6
+        "000000000101" & "00001" & ALU_AND & "00101" & ALU_I_OP,   -- ANDI X5, X1, 5 == 5
+        "000000001010" & "00001" & ALU_OR & "00110" & ALU_I_OP     -- ORI  X6, X1, 10 == 15
     );
 begin
     uut : CPU port map (
@@ -137,10 +155,28 @@ begin
         Reg_Check("00000", X"00000000", "Debug failed-> Invalid register X0");
         Reg_Check("00001", X"00000005", "Debug failed-> Invalid register X1");
         Reg_Check("00010", X"00000006", "Debug failed-> Invalid register X2");
+        Reg_Check("00011", X"00000010", "Debug failed-> Invalid register X3");
         
         -- Reset the CPU
         En_Debug <= '0';
         CPU_Reset;
+        
+        -- Run the second program
+        I_instr <= rom_memory2(0);
+        wait until O_PC'event;
+        I_instr <= rom_memory2(1);
+        wait until O_PC'event;
+        I_instr <= rom_memory2(2);
+        wait until O_PC'event;
+        wait for clk_period * 4;
+        
+        -- Enter debug mode
+        -- Check: X4 == 6, X5 == 5, X6 == 15
+        En_Debug <= '1';
+        Reg_Check("00001", X"00000005", "Debug failed-> Invalid register X1");
+        Reg_Check("00100", X"00000006", "Debug failed-> Invalid register X4");
+        Reg_Check("00101", X"00000005", "Debug failed-> Invalid register X5");
+        Reg_Check("00110", X"0000000F", "Debug failed-> Invalid register X6");
         
         wait;
     end process;
