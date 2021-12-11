@@ -16,6 +16,7 @@ architecture Behavior of cpu_tb1 is
             O_PC          : out std_logic_vector(31 downto 0);
             O_Mem_Write   : out std_logic;
             O_Mem_Read    : out std_logic;
+            O_Mem_SX      : out std_logic;
             O_Mem_Address : out std_logic_vector(31 downto 0);
             O_Mem_Data    : out std_logic_vector(31 downto 0);
             O_Data_Len    : out std_logic_vector(1 downto 0);
@@ -31,6 +32,7 @@ architecture Behavior of cpu_tb1 is
         port (
             clk      : in std_logic;
             I_write  : in std_logic;
+            sx       : in std_logic;
             data_len : in std_logic_vector(1 downto 0);
             address  : in std_logic_vector(31 downto 0);
             I_data   : in std_logic_vector(31 downto 0);
@@ -46,7 +48,7 @@ architecture Behavior of cpu_tb1 is
     signal Reset : std_logic := '0';
     signal I_instr, O_PC, O_Mem_Address, O_Mem_Data, I_Mem_Data : std_logic_vector(31 downto 0) := X"00000000";
     signal O_Data_Len : std_logic_vector(1 downto 0) := "00";
-    signal O_Mem_Write, O_Mem_Read : std_logic := '0';
+    signal O_Mem_Write, O_Mem_Read, O_Mem_SX : std_logic := '0';
     
     -- Debug signals
     signal En_Debug : std_logic := '0';
@@ -55,7 +57,7 @@ architecture Behavior of cpu_tb1 is
     
     -- Memory signals
     signal Mem_Test : integer := 0;
-    signal I_write : std_logic := '0';
+    signal I_write, SX : std_logic := '0';
     signal data_len : std_logic_vector(1 downto 0) := "00";
     signal address, I_data, O_data : std_logic_vector(31 downto 0) := X"00000000";
     
@@ -64,6 +66,7 @@ architecture Behavior of cpu_tb1 is
     constant ALU_I_OP : std_logic_vector := "0010011";
     constant ALU_R_OP : std_logic_vector := "0110011";
     constant STORE_OP : std_logic_vector := "0100011";
+    constant LOAD_OP : std_logic_vector := "0000011";
     constant ALU_ADD : std_logic_vector := "000";
     constant ALU_XOR : std_logic_vector := "100";
     constant ALU_OR  : std_logic_vector := "110";
@@ -98,7 +101,15 @@ architecture Behavior of cpu_tb1 is
     );
     
     -- This contains the memory test
-    constant SIZE3 : integer := 15;
+    --
+    -- Memory map after all the stores are done
+    -- [0][0] = 5
+    -- [0][4] = 08
+    -- [2][0] = 5
+    -- [2][1] = 0x0BCD
+    -- [2][3] = 0x00FFABCD
+    --
+    constant SIZE3 : integer := 30;
     type instr_memory3 is array (0 to (SIZE3 - 1)) of std_logic_vector(31 downto 0);
     signal rom_memory3 : instr_memory3 := (
         "000000000101" & "00000" & ALU_ADD & "00010" & ALU_I_OP,   -- ADDI X2, X0, 5
@@ -115,7 +126,22 @@ architecture Behavior of cpu_tb1 is
         "0000000" & "00001" & "00010" & "000" & "00000" & STORE_OP, -- SB X2, [X1, 0]
         "0000000" & "00001" & "00100" & "001" & "00001" & STORE_OP, -- SH X4, [X1, 1]
         NOP,
-        "0000000" & "00001" & "00101" & "010" & "00011" & STORE_OP  -- SW X5, [X1, 3]
+        "0000000" & "00001" & "00101" & "010" & "00011" & STORE_OP, -- SW X5, [X1, 3]
+        NOP,
+        NOP,
+        NOP,
+        "000000000000" & "00000" & "000" & "01001" & LOAD_OP,      -- LB X9, [X0, 0]     (X9 == 5)
+        NOP,
+        "000000000011" & "00001" & "000" & "01010" & LOAD_OP,      -- LB X10, [X1, 3]     (X10 == CD)
+        NOP,
+        "000000000011" & "00001" & "001" & "01011" & LOAD_OP,      -- LH X11, [X1, 3]     (X11 == 0xABCD)
+        NOP,
+        "000000000011" & "00001" & "010" & "01100" & LOAD_OP,      -- LW X12, [X1, 3]     (X12 == 0x00FFABCD)
+        NOP,
+        "000000000011" & "00001" & "100" & "01101" & LOAD_OP,      -- LBU X13, [X1, 3]     (X10 == CD)
+        NOP,
+        "000000000011" & "00001" & "101" & "01110" & LOAD_OP,      -- LHU X14, [X1, 3]     (X11 == 0xABCD)
+        NOP
     );
 begin
     uut : CPU port map (
@@ -124,6 +150,7 @@ begin
         I_instr => I_instr,
         O_PC => O_PC,
         O_Mem_Write => O_Mem_Write,
+        O_Mem_SX => O_Mem_SX,
         O_Mem_Read => O_Mem_Read,
         O_Mem_Address => O_Mem_Address,
         O_Mem_Data => O_Mem_Data,
@@ -138,6 +165,7 @@ begin
     mem_uut : Memory port map(
         clk => clk,
         I_write => I_write,
+        SX => SX,
         data_len => data_len,
         address => address,
         I_data => I_data,
@@ -242,15 +270,22 @@ begin
         Mem_Check(3, X"00000005", "Mem[2][0] invalid");
         Mem_Check(4, X"00000BCD", "Mem[2][1] invalid");
         Mem_Check(5, X"00FFABCD", "Mem[2][3] invalid");
+        Reg_Check("01001", X"00000005", "Debug failed-> Invalid register X9 (!= 5)");
+        Reg_Check("01010", X"111111CD", "Debug failed-> Invalid register X10 (!= 0x111111CD)");
+        Reg_Check("01011", X"1111ABCD", "Debug failed-> Invalid register X11 (!= 0x1111ABCD)");
+        Reg_Check("01100", X"00FFABCD", "Debug failed-> Invalid register X12 (!= 0x00FFABCD)");
+        Reg_Check("01101", X"000000CD", "Debug failed-> Invalid register X13 (!= 0xCD)");
+        Reg_Check("01110", X"0000ABCD", "Debug failed-> Invalid register X14 (!= 0xABCD)");
         
         wait;
     end process;
     
     -- This process handles the memory signals
-    mem_proc : process(O_Mem_Read, O_Mem_Write, O_Mem_Address, O_Mem_Data, O_Data, Mem_Test)
+    mem_proc : process(O_Mem_Read, O_Mem_Write, O_Mem_SX, O_Mem_Address, O_Mem_Data, O_Data, Mem_Test)
     begin
         if Mem_Test = 0 then
             I_write <= O_Mem_Write;
+            SX <= O_Mem_SX;
             Address <= O_Mem_Address;
             I_data <= O_Mem_Data;
             data_len <= O_Data_Len;

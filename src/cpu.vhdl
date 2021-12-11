@@ -10,6 +10,7 @@ entity CPU is
         O_PC          : out std_logic_vector(31 downto 0);
         O_Mem_Write   : out std_logic;
         O_Mem_Read    : out std_logic;
+        O_Mem_Sx      : out std_logic;
         O_Mem_Address : out std_logic_vector(31 downto 0);
         O_Mem_Data    : out std_logic_vector(31 downto 0);
         O_Data_Len    : out std_logic_vector(1 downto 0);
@@ -86,7 +87,7 @@ architecture Behavior of CPU is
     -- Intermediate signals for the pipeline
     signal sel_D_1, sel_D_2 : std_logic_vector(4 downto 0);
     signal srcImm, RegWrite, RegWrite2, MemWrite, MemWrite2 : std_logic := '0';
-    signal MemRead, MemRead2 : std_logic := '0';
+    signal MemRead, MemRead2, Mem_SX, Mem_SX2 : std_logic := '0';
     signal MemData, srcImm_In : std_logic_vector(31 downto 0);
     signal Data_Len, Data_Len2 : std_logic_vector(1 downto 0);
 
@@ -164,6 +165,7 @@ begin
                     MemWrite <= '0';
                     Mem_Stall <= '0';
                     MemRead <= '0';
+                    Mem_SX <= '0';
                     
                     case opcode is
                         -- ALU instructions
@@ -198,9 +200,10 @@ begin
                             WB_Stall <= 2;
                             IF_stall <= '1';
                             RegWrite <= '1';
+                            Mem_SX <= not funct3(2);
                             case funct3 is
-                                when "000" => Data_Len <= "00";
-                                when "001" => Data_Len <= "01";
+                                when "000" | "100" => Data_Len <= "00";
+                                when "001" | "101" => Data_Len <= "01";
                                 when "010" => Data_Len <= "11";
                                 when others => Data_Len <= "00";
                             end case;
@@ -246,6 +249,7 @@ begin
                     ALU_Op <= ALU_Op1;
                     MemWrite2 <= MemWrite;
                     MemRead2 <= MemRead;
+                    Mem_SX2 <= Mem_SX;
                     RegWrite2 <= RegWrite;
                     MemData <= O_dataB;
                     Data_Len2 <= Data_Len;
@@ -263,6 +267,7 @@ begin
                     O_Mem_Read <= MemRead2;
                     O_Mem_Address <= Result;
                     O_Data_Len <= Data_Len2;
+                    O_Mem_SX <= Mem_SX2;
                     
                     if MemWrite2 = '1' then
                         O_Mem_Data <= MemData;

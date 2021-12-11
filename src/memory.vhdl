@@ -6,6 +6,7 @@ entity Memory is
     port (
         clk      : in std_logic;
         I_write  : in std_logic;
+        sx       : in std_logic;
         data_len : in std_logic_vector(1 downto 0);
         address  : in std_logic_vector(31 downto 0);
         I_data   : in std_logic_vector(31 downto 0);
@@ -19,10 +20,13 @@ architecture Behavior of Memory is
     type mem_block is array (0 to 4095) of word_block;
     signal mem : mem_block;
 begin
-    process (clk, I_write, data_len, address, I_data)
+    process (clk, I_write, sx, data_len, address, I_data)
         variable I_address : std_logic_vector(31 downto 0);
         variable block_indices : index_array;
         variable word_indices : index_array;
+        
+        variable i8_entry : std_logic_vector(7 downto 0);
+        variable i16_entry : std_logic_vector(15 downto 0);
     begin
         for i in 0 to 3 loop
             if not is_X(address) then
@@ -35,29 +39,28 @@ begin
         case data_len is
             -- Read one word
             when "00" =>
-                O_data <= X"000000" & mem(block_indices(0))(word_indices(0));
+                i8_entry := mem(block_indices(0))(word_indices(0));
+                if SX = '1' and i8_entry(7) = '1' then
+                    O_data <= X"111111" & i8_entry;
+                else
+                    O_data <= X"000000" & i8_entry;
+                end if;
                 if I_write = '1' then
                     mem(block_indices(0))(word_indices(0)) <= I_data(7 downto 0);
                 end if;
             
             -- Read two words
             when "01" =>
-                O_data <= X"0000" & mem(block_indices(1))(word_indices(1))
-                                  & mem(block_indices(0))(word_indices(0));
-                if I_write = '1' then
-                    mem(block_indices(0))(word_indices(0)) <= I_data(7 downto 0);
-                    mem(block_indices(1))(word_indices(1)) <= I_data(15 downto 8);
+                i16_entry := mem(block_indices(1))(word_indices(1))
+                             & mem(block_indices(0))(word_indices(0));
+                if SX = '1' and i16_entry(15) = '1' then
+                    O_data <= X"1111" & i16_entry;
+                else
+                    O_data <= X"0000" & i16_entry;
                 end if;
-            
-            -- Read three words
-            when "10" =>
-                O_data <= X"00" & mem(block_indices(2))(word_indices(2))
-                                & mem(block_indices(1))(word_indices(1))
-                                & mem(block_indices(0))(word_indices(0));
                 if I_write = '1' then
                     mem(block_indices(0))(word_indices(0)) <= I_data(7 downto 0);
                     mem(block_indices(1))(word_indices(1)) <= I_data(15 downto 8);
-                    mem(block_indices(2))(word_indices(2)) <= I_data(23 downto 16);
                 end if;
             
             -- Read four words
