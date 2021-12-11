@@ -98,7 +98,7 @@ architecture Behavior of cpu_tb1 is
     );
     
     -- This contains the memory test
-    constant SIZE3 : integer := 13;
+    constant SIZE3 : integer := 15;
     type instr_memory3 is array (0 to (SIZE3 - 1)) of std_logic_vector(31 downto 0);
     signal rom_memory3 : instr_memory3 := (
         "000000000101" & "00000" & ALU_ADD & "00010" & ALU_I_OP,   -- ADDI X2, X0, 5
@@ -109,11 +109,13 @@ architecture Behavior of cpu_tb1 is
         "0000000" & "00000" & "00100" & ALU_ADD & "00101" & ALU_R_OP,   -- ADD X5, X4, X0
         NOP,
         "00000000" & X"FFA" & "00101" & "0110111",                  -- LUI X5, 0xFFA
-        "0000000" & "00000" & "00010" & "000" & "00000" & STORE_OP, -- SW X2, [X0, 0]
-        "0000000" & "00000" & "00011" & "000" & "00100" & STORE_OP, -- SW X3, [X0, 4],
+        "0000000" & "00000" & "00010" & "000" & "00000" & STORE_OP, -- SB X2, [X0, 0]
+        "0000000" & "00000" & "00011" & "000" & "00100" & STORE_OP, -- SB X3, [X0, 4],
         NOP,
-        "0000000" & "00001" & "00010" & "000" & "00000" & STORE_OP, -- SW X2, [X1, 0]
-        "0000000" & "00001" & "00100" & "001" & "00001" & STORE_OP  -- SH X4, [X1, 1]
+        "0000000" & "00001" & "00010" & "000" & "00000" & STORE_OP, -- SB X2, [X1, 0]
+        "0000000" & "00001" & "00100" & "001" & "00001" & STORE_OP, -- SH X4, [X1, 1]
+        NOP,
+        "0000000" & "00001" & "00101" & "010" & "00011" & STORE_OP  -- SW X5, [X1, 3]
     );
 begin
     uut : CPU port map (
@@ -239,6 +241,7 @@ begin
         Mem_Check(2, X"00000008", "Mem[0][4] invalid");
         Mem_Check(3, X"00000005", "Mem[2][0] invalid");
         Mem_Check(4, X"00000BCD", "Mem[2][1] invalid");
+        Mem_Check(5, X"00FFABCD", "Mem[2][3] invalid");
         
         wait;
     end process;
@@ -270,6 +273,9 @@ begin
                 when 4 =>
                     Address <= X"00000021";
                     Data_Len <= "01";
+                when 5 =>
+                    Address <= X"00000023";
+                    Data_Len <= "11";
                     
                 when others =>
             end case;
