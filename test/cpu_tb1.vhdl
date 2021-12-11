@@ -98,13 +98,17 @@ architecture Behavior of cpu_tb1 is
     );
     
     -- This contains the memory test
-    constant SIZE3 : integer := 9;
+    constant SIZE3 : integer := 13;
     type instr_memory3 is array (0 to (SIZE3 - 1)) of std_logic_vector(31 downto 0);
     signal rom_memory3 : instr_memory3 := (
         "000000000101" & "00000" & ALU_ADD & "00010" & ALU_I_OP,   -- ADDI X2, X0, 5
         "000000001000" & "00000" & ALU_ADD & "00011" & ALU_I_OP,   -- ADDI X3, X0, 8
         "000000100000" & "00000" & ALU_ADD & "00001" & ALU_I_OP,   -- ADDI X1, X0, 16
         "101111001101" & "00000" & ALU_ADD & "00100" & ALU_I_OP,   -- ADDI X4, X0, 0xBCD = 1011 1100 1101
+        NOP,
+        "0000000" & "00000" & "00100" & ALU_ADD & "00101" & ALU_R_OP,   -- ADD X5, X4, X0
+        NOP,
+        "00000000" & X"FFA" & "00101" & "0110111",                  -- LUI X5, 0xFFA
         "0000000" & "00000" & "00010" & "000" & "00000" & STORE_OP, -- SW X2, [X0, 0]
         "0000000" & "00000" & "00011" & "000" & "00100" & STORE_OP, -- SW X3, [X0, 4],
         NOP,
@@ -229,6 +233,8 @@ begin
         
         -- Enter debug mode
         En_Debug <= '1';
+        Reg_Check("00100", X"00000BCD", "Debug failed-> Invalid register X4 (!= 0xBCD)");
+        Reg_Check("00101", X"00FFABCD", "Debug failed-> Invalid register X5 (!= OXFFABCD)");
         Mem_Check(1, X"00000005", "Mem[0][0] invalid");
         Mem_Check(2, X"00000008", "Mem[0][4] invalid");
         Mem_Check(3, X"00000005", "Mem[2][0] invalid");
@@ -250,6 +256,7 @@ begin
             end if;
         else
             I_write <= '0';
+            -- TODO: We need a better way to test this
             case Mem_Test is
                 when 1 =>
                     Address <= X"00000000";

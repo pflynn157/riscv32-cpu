@@ -87,8 +87,7 @@ architecture Behavior of CPU is
     signal sel_D_1, sel_D_2 : std_logic_vector(4 downto 0);
     signal srcImm, RegWrite, RegWrite2, MemWrite, MemWrite2 : std_logic := '0';
     signal MemRead, MemRead2 : std_logic := '0';
-    signal Imm_S2 : std_logic_vector(11 downto 0);
-    signal MemData : std_logic_vector(31 downto 0);
+    signal MemData, srcImm_In : std_logic_vector(31 downto 0);
     signal Data_Len, Data_Len2 : std_logic_vector(1 downto 0);
 
     -- Pipeline and program counter signals
@@ -166,14 +165,13 @@ begin
                     Mem_Stall <= '0';
                     MemRead <= '0';
                     
-                    Imm_S2 <= Imm;
-                    
                     case opcode is
                         -- ALU instructions
                         when "0010011" | "0110011" =>
                             ALU_op1 <= funct3;
                             RegWrite <= '1';
                             if opcode(5) = '0' then
+                                srcImm_In <= "00000000000000000000" & Imm;
                                 srcImm <= '1';
                             end if;
                             
@@ -183,8 +181,17 @@ begin
                                 B_Inv1 <= '1';
                             end if;
                             
+                        -- LUI instruction
+                        when "0110111" =>
+                            ALU_op1 <= "000";
+                            RegWrite <= '1';
+                            sel_A <= rd;
+                            srcImm <= '1';
+                            srcImm_In <= UJ_Imm & "000000000000";
+                            
                         -- Load instructions
                         when "0000011" =>
+                            srcImm_In <= "00000000000000000000" & Imm;
                             ALU_op1 <= "000";
                             srcImm <= '1';
                             MemRead <= '1';
@@ -200,7 +207,7 @@ begin
                             
                         -- Store instructions
                         when "0100011" =>
-                            Imm_S2 <= Imm2 & Imm1;
+                            srcImm_In <= "00000000000000000000" & Imm2 & Imm1;
                             ALU_Op1 <= "000";
                             sel_A <= rs2;
                             sel_B <= rs1;
@@ -245,7 +252,7 @@ begin
                     
                     A <= O_dataA;
                     if srcImm = '1' then
-                        B <= "00000000000000000000" & Imm_S2;
+                        B <= srcImm_In;
                     else
                         B <= O_dataB;
                     end if;
