@@ -160,6 +160,7 @@ begin
                     sel_A <= rs1;
                     sel_B <= rs2;
                     srcImm <= '0';
+                    B_Inv1 <= '0';
                     RegWrite <= '0';
                     MemWrite <= '0';
                     Mem_Stall <= '0';

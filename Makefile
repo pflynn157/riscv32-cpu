@@ -39,7 +39,7 @@ compile:
 run:
 	cd sim; \
 	ghdl -r $(GHDL_FLAGS) cpu_tb $(GHDL_STOP) --wave=cpu_tb.ghw; \
-	ghdl -r $(GHDL_FLAGS) cpu_tb1 $(GHDL_STOP) --wave=cpu_test.ghw; \
+	ghdl -r $(GHDL_FLAGS) cpu_tb1 --stop-time=800ns --wave=cpu_test.ghw; \
 	cd ..
 
 view:

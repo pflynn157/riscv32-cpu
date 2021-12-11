@@ -54,6 +54,7 @@ architecture Behavior of cpu_tb1 is
     signal DB_Data : std_logic_vector(31 downto 0) := X"00000000";
     
     -- Memory signals
+    signal Mem_Test : integer := 0;
     signal I_write : std_logic := '0';
     signal data_len : std_logic_vector(1 downto 0) := "00";
     signal address, I_data, O_data : std_logic_vector(31 downto 0) := X"00000000";
@@ -61,6 +62,7 @@ architecture Behavior of cpu_tb1 is
     -- Opcodes
     constant ALU_I_OP : std_logic_vector := "0010011";
     constant ALU_R_OP : std_logic_vector := "0110011";
+    constant STORE_OP : std_logic_vector := "0100011";
     constant ALU_ADD : std_logic_vector := "000";
     constant ALU_XOR : std_logic_vector := "100";
     constant ALU_OR  : std_logic_vector := "110";
@@ -92,6 +94,16 @@ architecture Behavior of cpu_tb1 is
         "0000000" & "00010" & "00001" & ALU_XOR & "01010" & ALU_R_OP,   -- XOR X10, X1, X2 (X10 == 6)
         "0000000" & "00011" & "00001" & ALU_AND & "01011" & ALU_R_OP,   -- AND X11, X1, X3 (X11 == 5)
         "0000000" & "00100" & "00001" & ALU_OR & "01100" & ALU_R_OP     -- OR X12, X1, X4 (X12 == 15)
+    );
+    
+    -- This contains the memory test
+    constant SIZE3 : integer := 4;
+    type instr_memory3 is array (0 to (SIZE3 - 1)) of std_logic_vector(31 downto 0);
+    signal rom_memory3 : instr_memory3 := (
+        "000000000101" & "00000" & ALU_ADD & "00010" & ALU_I_OP,   -- ADDI X2, X0, 5
+        "000000001000" & "00000" & ALU_ADD & "00011" & ALU_I_OP,   -- ADDI X3, X0, 8
+        "0000000" & "00000" & "00010" & "000" & "00000" & STORE_OP, -- SW X2, [X0, 0]
+        "0000000" & "00000" & "00011" & "000" & "00100" & STORE_OP  -- SW X3, [X0, 4]
     );
 begin
     uut : CPU port map (
@@ -145,6 +157,13 @@ begin
             wait for clk_period * 2;
             assert DB_data = Exp_Data report message severity warning;
         end Reg_Check;
+        
+        procedure Mem_Check(Test_Num : in integer; Exp_Data : in std_logic_vector(31 downto 0); message : String) is
+        begin
+            Mem_Test <= Test_Num;
+            wait for clk_period;
+            assert O_Data = Exp_Data report message severity warning;
+        end Mem_Check;
     begin
         -- Reset the CPU
         --CPU_Reset;
@@ -191,18 +210,48 @@ begin
         Reg_Check("01011", X"00000005", "Debug failed-> Invalid register X11");
         Reg_Check("01100", X"0000000F", "Debug failed-> Invalid register X12");
         
+        -- Reset the CPU
+        En_Debug <= '0';
+        CPU_Reset;
+        
+        -- Run the third program
+        for i in 0 to (SIZE3 - 1) loop
+            I_instr <= rom_memory3(i);
+            wait until O_PC'event;
+        end loop;
+        wait for clk_period * 6;
+        
+        -- Enter debug mode
+        En_Debug <= '1';
+        Mem_Check(1, X"00000005", "Mem[0][0] invalid");
+        Mem_Check(2, X"00000008", "Mem[0][4] invalid");
+        
         wait;
     end process;
     
     -- This process handles the memory signals
-    mem_proc : process(O_Mem_Read, O_Mem_Write, O_Mem_Address, O_Mem_Data, O_Data)
+    mem_proc : process(O_Mem_Read, O_Mem_Write, O_Mem_Address, O_Mem_Data, O_Data, Mem_Test)
     begin
-        I_write <= O_Mem_Write;
-        Address <= O_Mem_Address;
-        I_data <= O_Mem_Data;
-        data_len <= O_Data_Len;
-        if O_Mem_Read = '1' then
-            I_Mem_Data <= O_Data;
+        if Mem_Test = 0 then
+            I_write <= O_Mem_Write;
+            Address <= O_Mem_Address;
+            I_data <= O_Mem_Data;
+            data_len <= O_Data_Len;
+            if O_Mem_Read = '1' then
+                I_Mem_Data <= O_Data;
+            end if;
+        else
+            I_write <= '0';
+            case Mem_Test is
+                when 1 =>
+                    Address <= X"00000000";
+                    Data_Len <= "00";
+                when 2 =>
+                    Address <= X"00000004";
+                    Data_Len <= "00";
+                    
+                when others =>
+            end case;
         end if;
     end process;
 end Behavior;
