@@ -60,6 +60,7 @@ architecture Behavior of cpu_tb1 is
     signal address, I_data, O_data : std_logic_vector(31 downto 0) := X"00000000";
     
     -- Opcodes
+    constant NOP : std_logic_vector := X"00000000";
     constant ALU_I_OP : std_logic_vector := "0010011";
     constant ALU_R_OP : std_logic_vector := "0110011";
     constant STORE_OP : std_logic_vector := "0100011";
@@ -97,13 +98,18 @@ architecture Behavior of cpu_tb1 is
     );
     
     -- This contains the memory test
-    constant SIZE3 : integer := 4;
+    constant SIZE3 : integer := 9;
     type instr_memory3 is array (0 to (SIZE3 - 1)) of std_logic_vector(31 downto 0);
     signal rom_memory3 : instr_memory3 := (
         "000000000101" & "00000" & ALU_ADD & "00010" & ALU_I_OP,   -- ADDI X2, X0, 5
         "000000001000" & "00000" & ALU_ADD & "00011" & ALU_I_OP,   -- ADDI X3, X0, 8
+        "000000100000" & "00000" & ALU_ADD & "00001" & ALU_I_OP,   -- ADDI X1, X0, 16
+        "101111001101" & "00000" & ALU_ADD & "00100" & ALU_I_OP,   -- ADDI X4, X0, 0xBCD = 1011 1100 1101
         "0000000" & "00000" & "00010" & "000" & "00000" & STORE_OP, -- SW X2, [X0, 0]
-        "0000000" & "00000" & "00011" & "000" & "00100" & STORE_OP  -- SW X3, [X0, 4]
+        "0000000" & "00000" & "00011" & "000" & "00100" & STORE_OP, -- SW X3, [X0, 4],
+        NOP,
+        "0000000" & "00001" & "00010" & "000" & "00000" & STORE_OP, -- SW X2, [X1, 0]
+        "0000000" & "00001" & "00100" & "001" & "00001" & STORE_OP  -- SH X4, [X1, 1]
     );
 begin
     uut : CPU port map (
@@ -225,6 +231,8 @@ begin
         En_Debug <= '1';
         Mem_Check(1, X"00000005", "Mem[0][0] invalid");
         Mem_Check(2, X"00000008", "Mem[0][4] invalid");
+        Mem_Check(3, X"00000005", "Mem[2][0] invalid");
+        Mem_Check(4, X"00000BCD", "Mem[2][1] invalid");
         
         wait;
     end process;
@@ -249,6 +257,12 @@ begin
                 when 2 =>
                     Address <= X"00000004";
                     Data_Len <= "00";
+                when 3 =>
+                    Address <= X"00000020";
+                    Data_Len <= "00";
+                when 4 =>
+                    Address <= X"00000021";
+                    Data_Len <= "01";
                     
                 when others =>
             end case;
