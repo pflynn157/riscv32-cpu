@@ -78,7 +78,7 @@ architecture Behavior of cpu_tb1 is
     -- Register contents:
     -- X1: 5 | X2: 6 | X3: 16
     
-    constant SIZE2 : integer := 7;
+    constant SIZE2 : integer := 8;
     type instr_memory2 is array (0 to (SIZE2 - 1)) of std_logic_vector(31 downto 0);
     signal rom_memory2 : instr_memory2 := (
         "000000000011" & "00001" & ALU_XOR & "00101" & ALU_I_OP,   -- XORI X5, X1, 3 == 6
@@ -87,7 +87,8 @@ architecture Behavior of cpu_tb1 is
         "000000000011" & "00000" & ALU_ADD & "00010" & ALU_I_OP,   -- ADDI X2, X0, 3
         "000000000101" & "00000" & ALU_ADD & "00011" & ALU_I_OP,   -- ADDI X3, X0, 5
         "000000001010" & "00000" & ALU_ADD & "00100" & ALU_I_OP,   -- ADDI X4, X0, 10
-        "0000000" & "00001" & "00010" & ALU_ADD & "01000" & ALU_R_OP    -- ADD X8, X2, X1 (X8 == 8)
+        "0000000" & "00001" & "00010" & ALU_ADD & "01000" & ALU_R_OP,   -- ADD X8, X2, X1 (X8 == 8)
+        "0100000" & "00010" & "00001" & ALU_ADD & "01001" & ALU_R_OP    -- SUB X9, X1, X2 (X9 == 2)
     );
 begin
     uut : CPU port map (
@@ -181,6 +182,7 @@ begin
         Reg_Check("00110", X"00000005", "Debug failed-> Invalid register X6");
         Reg_Check("00111", X"0000000F", "Debug failed-> Invalid register X7");
         Reg_Check("01000", X"00000008", "Debug failed-> Invalid register X8");
+        Reg_Check("01001", X"00000002", "Debug failed-> Invalid register X9");
         
         wait;
     end process;

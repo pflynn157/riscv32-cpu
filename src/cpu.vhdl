@@ -76,7 +76,7 @@ architecture Behavior of CPU is
     -- Signals for the ALU component
     signal A, B, Result: std_logic_vector(31 downto 0);
     signal ALU_Op, ALU_Op1 : std_logic_vector(2 downto 0);
-    signal B_Inv, Zero : std_logic := '0';
+    signal B_Inv, B_Inv1, Zero : std_logic := '0';
     
     -- Signals for the register file component
     signal sel_A, sel_B, sel_D : std_logic_vector(4 downto 0);
@@ -176,6 +176,12 @@ begin
                                 srcImm <= '1';
                             end if;
                             
+                            -- Check subtraction. We need to make sure we have an R-type
+                            -- ALU opcode so we don't accidently set B_Inv based on Imm
+                            if opcode(5) = '1' and imm2(5) = '1' then
+                                B_Inv1 <= '1';
+                            end if;
+                            
                         -- Load instructions
                         when "0000011" =>
                             ALU_op1 <= "000";
@@ -216,7 +222,9 @@ begin
                     elsif opcode = "0000011" then
                     elsif opcode = "0000000" then
                     else
-                        if rd = sel_A or rd = sel_B then
+                        if rd = sel_A then
+                            IF_stall <= '1';
+                        elsif rd = sel_B and SrcImm = '0' then
                             IF_stall <= '1';
                         end if;
                     end if;
@@ -225,6 +233,7 @@ begin
                 
                 -- Instruction execute
                 elsif stage = 3 then
+                    B_Inv <= B_Inv1;
                     sel_D_2 <= sel_D_1;
                     ALU_Op <= ALU_Op1;
                     MemWrite2 <= MemWrite;
