@@ -60,6 +60,7 @@ architecture Behavior of cpu_tb1 is
     
     -- Opcodes
     constant ALU_I_OP : std_logic_vector := "0010011";
+    constant ALU_R_OP : std_logic_vector := "0110011";
     constant ALU_ADD : std_logic_vector := "000";
     constant ALU_XOR : std_logic_vector := "100";
     constant ALU_OR  : std_logic_vector := "110";
@@ -77,12 +78,16 @@ architecture Behavior of cpu_tb1 is
     -- Register contents:
     -- X1: 5 | X2: 6 | X3: 16
     
-    constant SIZE2 : integer := 3;
+    constant SIZE2 : integer := 7;
     type instr_memory2 is array (0 to (SIZE2 - 1)) of std_logic_vector(31 downto 0);
     signal rom_memory2 : instr_memory2 := (
-        "000000000011" & "00001" & ALU_XOR & "00100" & ALU_I_OP,   -- XORI X4, X1, 3 == 6
-        "000000000101" & "00001" & ALU_AND & "00101" & ALU_I_OP,   -- ANDI X5, X1, 5 == 5
-        "000000001010" & "00001" & ALU_OR & "00110" & ALU_I_OP     -- ORI  X6, X1, 10 == 15
+        "000000000011" & "00001" & ALU_XOR & "00101" & ALU_I_OP,   -- XORI X5, X1, 3 == 6
+        "000000000101" & "00001" & ALU_AND & "00110" & ALU_I_OP,   -- ANDI X6, X1, 5 == 5
+        "000000001010" & "00001" & ALU_OR & "00111" & ALU_I_OP,    -- ORI  X7, X1, 10 == 15
+        "000000000011" & "00000" & ALU_ADD & "00010" & ALU_I_OP,   -- ADDI X2, X0, 3
+        "000000000101" & "00000" & ALU_ADD & "00011" & ALU_I_OP,   -- ADDI X3, X0, 5
+        "000000001010" & "00000" & ALU_ADD & "00100" & ALU_I_OP,   -- ADDI X4, X0, 10
+        "0000000" & "00001" & "00010" & ALU_ADD & "01000" & ALU_R_OP    -- ADD X8, X2, X1 (X8 == 8)
     );
 begin
     uut : CPU port map (
@@ -162,21 +167,20 @@ begin
         CPU_Reset;
         
         -- Run the second program
-        I_instr <= rom_memory2(0);
-        wait until O_PC'event;
-        I_instr <= rom_memory2(1);
-        wait until O_PC'event;
-        I_instr <= rom_memory2(2);
-        wait until O_PC'event;
-        wait for clk_period * 4;
+        for i in 0 to (SIZE2 - 1) loop
+            I_instr <= rom_memory2(i);
+            wait until O_PC'event;
+        end loop;
+        wait for clk_period * 6;
         
         -- Enter debug mode
-        -- Check: X4 == 6, X5 == 5, X6 == 15
+        -- Check: X5 == 6, X6 == 5, X7 == 15, X8 == 8
         En_Debug <= '1';
         Reg_Check("00001", X"00000005", "Debug failed-> Invalid register X1");
-        Reg_Check("00100", X"00000006", "Debug failed-> Invalid register X4");
-        Reg_Check("00101", X"00000005", "Debug failed-> Invalid register X5");
-        Reg_Check("00110", X"0000000F", "Debug failed-> Invalid register X6");
+        Reg_Check("00101", X"00000006", "Debug failed-> Invalid register X5");
+        Reg_Check("00110", X"00000005", "Debug failed-> Invalid register X6");
+        Reg_Check("00111", X"0000000F", "Debug failed-> Invalid register X7");
+        Reg_Check("01000", X"00000008", "Debug failed-> Invalid register X8");
         
         wait;
     end process;
