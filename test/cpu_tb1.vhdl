@@ -78,7 +78,7 @@ architecture Behavior of cpu_tb1 is
     -- Register contents:
     -- X1: 5 | X2: 6 | X3: 16
     
-    constant SIZE2 : integer := 8;
+    constant SIZE2 : integer := 11;
     type instr_memory2 is array (0 to (SIZE2 - 1)) of std_logic_vector(31 downto 0);
     signal rom_memory2 : instr_memory2 := (
         "000000000011" & "00001" & ALU_XOR & "00101" & ALU_I_OP,   -- XORI X5, X1, 3 == 6
@@ -88,7 +88,10 @@ architecture Behavior of cpu_tb1 is
         "000000000101" & "00000" & ALU_ADD & "00011" & ALU_I_OP,   -- ADDI X3, X0, 5
         "000000001010" & "00000" & ALU_ADD & "00100" & ALU_I_OP,   -- ADDI X4, X0, 10
         "0000000" & "00001" & "00010" & ALU_ADD & "01000" & ALU_R_OP,   -- ADD X8, X2, X1 (X8 == 8)
-        "0100000" & "00010" & "00001" & ALU_ADD & "01001" & ALU_R_OP    -- SUB X9, X1, X2 (X9 == 2)
+        "0100000" & "00010" & "00001" & ALU_ADD & "01001" & ALU_R_OP,   -- SUB X9, X1, X2 (X9 == 2)
+        "0000000" & "00010" & "00001" & ALU_XOR & "01010" & ALU_R_OP,   -- XOR X10, X1, X2 (X10 == 6)
+        "0000000" & "00011" & "00001" & ALU_AND & "01011" & ALU_R_OP,   -- AND X11, X1, X3 (X11 == 5)
+        "0000000" & "00100" & "00001" & ALU_OR & "01100" & ALU_R_OP     -- OR X12, X1, X4 (X12 == 15)
     );
 begin
     uut : CPU port map (
@@ -176,6 +179,7 @@ begin
         
         -- Enter debug mode
         -- Check: X5 == 6, X6 == 5, X7 == 15, X8 == 8
+        --       X10 == 6, X11 = 5, X12 = 15
         En_Debug <= '1';
         Reg_Check("00001", X"00000005", "Debug failed-> Invalid register X1");
         Reg_Check("00101", X"00000006", "Debug failed-> Invalid register X5");
@@ -183,6 +187,9 @@ begin
         Reg_Check("00111", X"0000000F", "Debug failed-> Invalid register X7");
         Reg_Check("01000", X"00000008", "Debug failed-> Invalid register X8");
         Reg_Check("01001", X"00000002", "Debug failed-> Invalid register X9");
+        Reg_Check("01010", X"00000006", "Debug failed-> Invalid register X10");
+        Reg_Check("01011", X"00000005", "Debug failed-> Invalid register X11");
+        Reg_Check("01100", X"0000000F", "Debug failed-> Invalid register X12");
         
         wait;
     end process;

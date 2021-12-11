@@ -1,10 +1,10 @@
 [*]
 [*] GTKWave Analyzer v3.3.109 (w)1999-2020 BSI
-[*] Sat Dec 11 13:55:59 2021
+[*] Sat Dec 11 14:01:03 2021
 [*]
 [dumpfile] "/home/patrick/Projects/riscv32-cpu/sim/cpu_test.ghw"
-[dumpfile_mtime] "Sat Dec 11 13:55:50 2021"
-[dumpfile_size] 2095212
+[dumpfile_mtime] "Sat Dec 11 14:00:48 2021"
+[dumpfile_size] 2095929
 [savefile] "/home/patrick/Projects/riscv32-cpu/cpu_test.gtkw"
 [timestart] 0
 [size] 1920 1052
@@ -34,6 +34,7 @@ top.cpu_tb1.en_debug
 @22
 #{top.cpu_tb1.uut.rs1[4:0]} top.cpu_tb1.uut.rs1[4] top.cpu_tb1.uut.rs1[3] top.cpu_tb1.uut.rs1[2] top.cpu_tb1.uut.rs1[1] top.cpu_tb1.uut.rs1[0]
 #{top.cpu_tb1.uut.rs2[4:0]} top.cpu_tb1.uut.rs2[4] top.cpu_tb1.uut.rs2[3] top.cpu_tb1.uut.rs2[2] top.cpu_tb1.uut.rs2[1] top.cpu_tb1.uut.rs2[0]
+@23
 #{top.cpu_tb1.uut.rd[4:0]} top.cpu_tb1.uut.rd[4] top.cpu_tb1.uut.rd[3] top.cpu_tb1.uut.rd[2] top.cpu_tb1.uut.rd[1] top.cpu_tb1.uut.rd[0]
 @200
 -
@@ -48,9 +49,8 @@ top.cpu_tb1.en_debug
 #{top.cpu_tb1.uut.o_datab[31:0]} top.cpu_tb1.uut.o_datab[31] top.cpu_tb1.uut.o_datab[30] top.cpu_tb1.uut.o_datab[29] top.cpu_tb1.uut.o_datab[28] top.cpu_tb1.uut.o_datab[27] top.cpu_tb1.uut.o_datab[26] top.cpu_tb1.uut.o_datab[25] top.cpu_tb1.uut.o_datab[24] top.cpu_tb1.uut.o_datab[23] top.cpu_tb1.uut.o_datab[22] top.cpu_tb1.uut.o_datab[21] top.cpu_tb1.uut.o_datab[20] top.cpu_tb1.uut.o_datab[19] top.cpu_tb1.uut.o_datab[18] top.cpu_tb1.uut.o_datab[17] top.cpu_tb1.uut.o_datab[16] top.cpu_tb1.uut.o_datab[15] top.cpu_tb1.uut.o_datab[14] top.cpu_tb1.uut.o_datab[13] top.cpu_tb1.uut.o_datab[12] top.cpu_tb1.uut.o_datab[11] top.cpu_tb1.uut.o_datab[10] top.cpu_tb1.uut.o_datab[9] top.cpu_tb1.uut.o_datab[8] top.cpu_tb1.uut.o_datab[7] top.cpu_tb1.uut.o_datab[6] top.cpu_tb1.uut.o_datab[5] top.cpu_tb1.uut.o_datab[4] top.cpu_tb1.uut.o_datab[3] top.cpu_tb1.uut.o_datab[2] top.cpu_tb1.uut.o_datab[1] top.cpu_tb1.uut.o_datab[0]
 @200
 -
-@29
-top.cpu_tb1.uut.b_inv
 @28
+top.cpu_tb1.uut.b_inv
 #{top.cpu_tb1.uut.funct3[2:0]} top.cpu_tb1.uut.funct3[2] top.cpu_tb1.uut.funct3[1] top.cpu_tb1.uut.funct3[0]
 #{top.cpu_tb1.uut.uut_alu.op[2:0]} top.cpu_tb1.uut.uut_alu.op[2] top.cpu_tb1.uut.uut_alu.op[1] top.cpu_tb1.uut.uut_alu.op[0]
 @24
