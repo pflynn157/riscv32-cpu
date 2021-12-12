@@ -185,7 +185,6 @@ begin
         
         -- Run program 2
         I_instr <= rom_memory2(0);
-        wait until O_PC'event;
         while to_integer(unsigned(O_PC)) < SIZE2 loop
             I_instr <= rom_memory2(to_integer(unsigned(O_PC)));
             wait until O_PC'event;
@@ -205,7 +204,6 @@ begin
         
         -- Run program 2
         I_instr <= rom_memory3(0);
-        wait until O_PC'event;
         while to_integer(unsigned(O_PC)) < SIZE3 loop
             I_instr <= rom_memory3(to_integer(unsigned(O_PC)));
             wait until O_PC'event;
