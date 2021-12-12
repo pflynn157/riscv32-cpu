@@ -12,6 +12,7 @@ architecture Behavior of mem_tb is
         port (
             clk      : in std_logic;
             I_write  : in std_logic;
+            sx       : in std_logic;
             data_len : in std_logic_vector(1 downto 0);
             address  : in std_logic_vector(31 downto 0);
             I_data   : in std_logic_vector(31 downto 0);
@@ -20,7 +21,7 @@ architecture Behavior of mem_tb is
     end component;
     
     -- Declare the signals we need
-    signal I_write : std_logic := '0';
+    signal I_write, SX : std_logic := '0';
     signal data_len : std_logic_vector(1 downto 0) := "00";
     signal address, I_data, O_data : std_logic_vector(31 downto 0) := X"00000000";
     
@@ -33,6 +34,7 @@ begin
     uut : Memory port map(
         clk => clk,
         I_write => I_write,
+        SX => SX,
         data_len => data_len,
         address => address,
         I_data => I_data,

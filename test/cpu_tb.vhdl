@@ -16,6 +16,7 @@ architecture Behavior of cpu_tb is
             O_PC          : out std_logic_vector(31 downto 0);
             O_Mem_Write   : out std_logic;
             O_Mem_Read    : out std_logic;
+            O_Mem_SX      : out std_logic;
             O_Mem_Address : out std_logic_vector(31 downto 0);
             O_Mem_Data    : out std_logic_vector(31 downto 0);
             O_Data_Len    : out std_logic_vector(1 downto 0);
@@ -31,6 +32,7 @@ architecture Behavior of cpu_tb is
         port (
             clk      : in std_logic;
             I_write  : in std_logic;
+            sx       : in std_logic;
             data_len : in std_logic_vector(1 downto 0);
             address  : in std_logic_vector(31 downto 0);
             I_data   : in std_logic_vector(31 downto 0);
@@ -46,7 +48,7 @@ architecture Behavior of cpu_tb is
     signal Reset : std_logic := '0';
     signal I_instr, O_PC, O_Mem_Address, O_Mem_Data, I_Mem_Data : std_logic_vector(31 downto 0) := X"00000000";
     signal O_Data_Len : std_logic_vector(1 downto 0) := "00";
-    signal O_Mem_Write, O_Mem_Read : std_logic := '0';
+    signal O_Mem_Write, O_Mem_Read, O_Mem_SX : std_logic := '0';
     
     -- Debug signals
     signal En_Debug : std_logic := '0';
@@ -54,7 +56,7 @@ architecture Behavior of cpu_tb is
     signal DB_Data : std_logic_vector(31 downto 0) := X"00000000";
     
     -- Memory signals
-    signal I_write : std_logic := '0';
+    signal I_write, SX : std_logic := '0';
     signal data_len : std_logic_vector(1 downto 0) := "00";
     signal address, I_data, O_data : std_logic_vector(31 downto 0) := X"00000000";
     
@@ -84,6 +86,7 @@ begin
         O_PC => O_PC,
         O_Mem_Write => O_Mem_Write,
         O_Mem_Read => O_Mem_Read,
+        O_Mem_SX => O_Mem_SX,
         O_Mem_Address => O_Mem_Address,
         O_Mem_Data => O_Mem_Data,
         O_Data_Len => O_Data_Len,
@@ -97,6 +100,7 @@ begin
     mem_uut : Memory port map(
         clk => clk,
         I_write => I_write,
+        SX => SX,
         data_len => data_len,
         address => address,
         I_data => I_data,
@@ -144,6 +148,7 @@ begin
     mem_proc : process(O_Mem_Read, O_Mem_Write, O_Mem_Address, O_Mem_Data, O_Data)
     begin
         I_write <= O_Mem_Write;
+        SX <= O_Mem_SX;
         Address <= O_Mem_Address;
         I_data <= O_Mem_Data;
         data_len <= O_Data_Len;

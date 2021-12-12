@@ -151,8 +151,12 @@ begin
             for stage in 1 to 5 loop
                 -- Instruction fetch
                 if stage = 1 and IF_stall = '0' then
+                    if opcode = "0000011" then
+                        instr <= X"00000000";
+                    else
                     PC <= std_logic_vector(unsigned(PC) + 1);
                     instr <= I_instr;
+                    end if;
                     
                 -- Instruction decode
                 elsif stage = 2 and IF_stall = '0' then
