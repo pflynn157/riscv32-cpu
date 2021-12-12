@@ -2,10 +2,10 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
-entity cpu_tb is
-end cpu_tb;
+entity bne_tb is
+end bne_tb;
 
-architecture Behavior of cpu_tb is
+architecture Behavior of bne_tb is
 
     -- Declare the CPU component
     component CPU is

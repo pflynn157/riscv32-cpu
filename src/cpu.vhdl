@@ -90,7 +90,7 @@ architecture Behavior of CPU is
     signal MemRead, MemRead2, Mem_SX, Mem_SX2 : std_logic := '0';
     signal MemData, srcImm_In : std_logic_vector(31 downto 0);
     signal Data_Len, Data_Len2 : std_logic_vector(1 downto 0);
-    signal Br_Op1, Br_Op : std_logic_vector(2 downto 0);
+    signal Br_Op : std_logic_vector(2 downto 0);
     signal Br : std_logic := '0';
     signal Br_stage : integer := 1;
 
@@ -163,13 +163,27 @@ begin
                 
             -- Evaluate
             elsif Br_Stage = 2 then
-                case funct3 is
+                case Br_Op is
                     -- BEQ
                     when "000" =>
                         if signed(Result) = 0 then
                             instr <= X"00000000";
                             PC <= std_logic_vector(signed(PC) + signed(SrcImm_In) - 2);
                         end if;
+                        
+                    -- BNE
+                    when "001" =>
+                        if signed(Result) /= 0 then
+                            instr <= X"00000000";
+                            PC <= std_logic_vector(signed(PC) + signed(SrcImm_In) - 2);
+                        end if;
+                    
+                    -- BLT
+                    
+                    -- BGE
+                    
+                    -- BLTU
+                    -- BGEU
                     
                     when others =>
                 end case;
@@ -238,6 +252,7 @@ begin
                             Br <= '1';
                             srcImm_In <= "00000000000000000000" & Imm2 & Imm1;
                             WB_stall <= 1;
+                            Br_Op <= funct3;
                             
                         -- Load instructions
                         when "0000011" =>

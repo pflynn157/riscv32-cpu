@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.109 (w)1999-2020 BSI
-[*] Sun Dec 12 16:48:12 2021
+[*] Sun Dec 12 18:55:28 2021
 [*]
 [dumpfile] "/home/patrick/Projects/riscv32-cpu/sim/cpu_tb.ghw"
-[dumpfile_mtime] "Sun Dec 12 16:47:53 2021"
-[dumpfile_size] 2097029
+[dumpfile_mtime] "Sun Dec 12 18:54:42 2021"
+[dumpfile_size] 2098286
 [savefile] "/home/patrick/Projects/riscv32-cpu/cpu.gtkw"
 [timestart] 0
 [size] 1920 1052
 [pos] -1 -1
-*-26.368574 85000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-26.368574 165000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
 [treeopen] top.cpu_tb.
 [treeopen] top.cpu_tb.mem_uut.mem.[0].
