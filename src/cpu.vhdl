@@ -90,6 +90,9 @@ architecture Behavior of CPU is
     signal MemRead, MemRead2, Mem_SX, Mem_SX2 : std_logic := '0';
     signal MemData, srcImm_In : std_logic_vector(31 downto 0);
     signal Data_Len, Data_Len2 : std_logic_vector(1 downto 0);
+    signal Br_Op1, Br_Op : std_logic_vector(2 downto 0);
+    signal Br : std_logic := '0';
+    signal Br_stage : integer := 1;
 
     -- Pipeline and program counter signals
     signal PC : std_logic_vector(31 downto 0) := X"00000000";
@@ -146,16 +149,50 @@ begin
             O_PC <= PC;
             O_Mem_Write <= '0';
             
+        -- The branch processor
+        -- This has 3 stages 1) R-fetch, math, evaluate
+        elsif rising_edge(clk) and Br = '1' then
+            -- ALU
+            if Br_Stage = 1 then
+                ALU_Op <= "000";
+                B_Inv <= '1';
+                A <= O_dataA;
+                B <= O_dataB;
+                PC <= std_logic_vector(signed(PC) - 1);
+                Br_Stage <= 2;
+                
+            -- Evaluate
+            elsif Br_Stage = 2 then
+                case funct3 is
+                    -- BEQ
+                    when "000" =>
+                        if signed(Result) = 0 then
+                            instr <= X"00000000";
+                            PC <= std_logic_vector(signed(PC) + signed(SrcImm_In) - 2);
+                        end if;
+                    
+                    when others =>
+                end case;
+                
+                Br_Stage <= 3;
+            
+            -- ??
+            elsif Br_Stage = 3 then
+                O_PC <= PC;
+                Br_Stage <= 1;
+                Br <= '0';
+            end if;
+            
         -- The main CPU
-        elsif rising_edge(clk) and En_Debug = '0' then
+        elsif rising_edge(clk) and En_Debug = '0' and Br = '0' then
             for stage in 1 to 5 loop
                 -- Instruction fetch
                 if stage = 1 and IF_stall = '0' then
                     if opcode = "0000011" then
                         instr <= X"00000000";
                     else
-                    PC <= std_logic_vector(unsigned(PC) + 1);
-                    instr <= I_instr;
+                        PC <= std_logic_vector(unsigned(PC) + 1);
+                        instr <= I_instr;
                     end if;
                     
                 -- Instruction decode
@@ -170,6 +207,7 @@ begin
                     Mem_Stall <= '0';
                     MemRead <= '0';
                     Mem_SX <= '0';
+                    Br <= '0';
                     
                     case opcode is
                         -- ALU instructions
@@ -194,6 +232,12 @@ begin
                             sel_A <= rd;
                             srcImm <= '1';
                             srcImm_In <= UJ_Imm & "000000000000";
+                            
+                        -- Branch instructions
+                        when "1100011" =>
+                            Br <= '1';
+                            srcImm_In <= "00000000000000000000" & Imm2 & Imm1;
+                            WB_stall <= 1;
                             
                         -- Load instructions
                         when "0000011" =>

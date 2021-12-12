@@ -64,19 +64,19 @@ architecture Behavior of cpu_tb is
     constant SIZE : integer := 13;
     type instr_memory is array (0 to (SIZE - 1)) of std_logic_vector(31 downto 0);
     signal rom_memory : instr_memory := (
-        "000000000101" & "00000" & "000" & "00001" & "0010011",   -- ADDI X1, X0, 5
-        "000000000110" & "00000" & "000" & "00010" & "0010011",   -- ADDI X2, X0, 6
-        "000000001010" & "00010" & "000" & "00011" & "0010011",   -- ADDI X3, X2, 10
-        "011011110100" & "00000" & "000" & "00001" & "0010011",   -- ADDI X1, X0, 0x6F4
-        "000000000110" & "00000" & "000" & "00010" & "0010011",   -- ADDI X2, X0, 6
-        "0000000" & "00000" & "00001" & "000" & "00000" & "0100011",   -- SB X1, [X0, 0]
-        "000000100000" & "00000" & "000" & "00010" & "0010011",   -- ADDI X2, X0, 32
-        "000000010000" & "00000" & "000" & "00011" & "0010011",   -- ADDI X3, X0, 16
-        "0000000" & "00011" & "00001" & "001" & "00000" & "0100011",  -- SH X1, [X3, 0]
-        "0000000" & "00010" & "00001" & "010" & "00000" & "0100011",  -- SW X1, [X2, 0]
-        "000000010000" & "00000" & "000" & "00011" & "0010011",        -- ADDI X3, X0, 16
-        "000000000000" & "00000" & "000" & "00010" & "0000011",       -- LB X2, [X0, 0]
-        "000000000111" & "00000" & "000" & "00001" & "0010011"        -- ADDI X1, X0, 7
+        "000000000101" & "00000" & "000" & "00001" & "0010011",         --[0] ADDI X1, X0, 5
+        "000000000110" & "00000" & "000" & "00010" & "0010011",         --[1] ADDI X2, X0, 6
+        "0000000" & "00000" & "00000" & "000" & "01001" & "1100011",    --[2] BEQ X0, X0, 9
+        "000000001011" & "00000" & "000" & "00011" & "0010011",         --[3] ADDI X3, X0, 11
+        "011011110100" & "00000" & "000" & "00001" & "0010011",         --[4] ADDI X1, X0, 0x6F4
+        "011011110100" & "00000" & "000" & "00010" & "0010011",         --[5] ADDI X2, X0, 0x6F4
+        "011011110100" & "00000" & "000" & "00011" & "0010011",         --[6] ADDI X3, X0, 0x6F4
+        "011011110100" & "00000" & "000" & "00100" & "0010011",         --[7] ADDI X4, X0, 0x6F4
+        "011011110100" & "00000" & "000" & "00101" & "0010011",         --[8] ADDI X5, X0, 0x6F4
+        "011011110100" & "00000" & "000" & "00110" & "0010011",         --[9] ADDI X6, X0, 0x6F4
+        "011011110100" & "00000" & "000" & "00111" & "0010011",         --[10] ADDI X7, X0, 0x6F4
+        "000000001010" & "00000" & "000" & "00011" & "0010011",         --[11] ADDI X3, X0, 10
+        "000000000111" & "00000" & "000" & "00010" & "0010011"          --[12] ADDI X2, X0, 7
     );
 begin
     uut : CPU port map (
@@ -121,25 +121,25 @@ begin
     begin
         I_instr <= rom_memory(0);
         wait until O_PC'event;
-        
-        for i in 1 to SIZE loop
-            if to_integer(unsigned(O_PC)) < SIZE then
-                I_instr <= rom_memory(to_integer(unsigned(O_PC)));
-                wait until O_PC'event;
-            else
-                Reset <= '1';
-            end if;
+        while to_integer(unsigned(O_PC)) < SIZE loop
+            I_instr <= rom_memory(to_integer(unsigned(O_PC)));
+            wait until O_PC'event;
         end loop;
+        --for i in 0 to (SIZE - 1) loop
+        --    I_instr <= rom_memory(to_integer(unsigned(O_PC)));
+        --    wait until O_PC'event;
+        --end loop;
+        wait for clk_period * 6;
         
         -- Reset the CPU
         I_instr <= X"00000000";
         Reset <= '1';
         
         -- Enter debug mode
-        En_Debug <= '1';
-        DB_Reg_Sel <= "00000";
-        wait for clk_period * 2;
-        assert DB_data = X"00000000" report "Debug failed-> Invalid register X0" severity error;
+        --En_Debug <= '1';
+        --DB_Reg_Sel <= "00000";
+        --wait for clk_period * 2;
+        --assert DB_data = X"00000000" report "Debug failed-> Invalid register X0" severity error;
         
         wait;
     end process;
