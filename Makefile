@@ -12,7 +12,8 @@ SIMFILES	= test/decoder_tb.vhdl \
            test/cpu_tb.vhdl \
            test/cpu_tb1.vhdl \
            test/beq_tb.vhdl \
-           test/bne_tb.vhdl
+           test/bne_tb.vhdl \
+           test/blt_tb.vhdl
 
 # GHDL
 GHDL_CMD	= ghdl
@@ -39,13 +40,15 @@ compile:
 	ghdl -e -o sim/cpu_tb1 $(GHDL_FLAGS) $(GHDL_WORKDIR) cpu_tb1
 	ghdl -e -o sim/beq_tb $(GHDL_FLAGS) $(GHDL_WORKDIR) beq_tb
 	ghdl -e -o sim/bne_tb $(GHDL_FLAGS) $(GHDL_WORKDIR) bne_tb
+	ghdl -e -o sim/blt_tb $(GHDL_FLAGS) $(GHDL_WORKDIR) blt_tb
 
 run:
 	cd sim; \
-	ghdl -r $(GHDL_FLAGS) cpu_tb --stop-time=600ns --wave=cpu_tb.ghw; \
+	ghdl -r $(GHDL_FLAGS) cpu_tb --stop-time=800ns --wave=cpu_tb.ghw; \
 	ghdl -r $(GHDL_FLAGS) cpu_tb1 --stop-time=1500ns --wave=cpu_test.ghw; \
 	ghdl -r $(GHDL_FLAGS) beq_tb --stop-time=600ns --wave=beq_tb.ghw; \
 	ghdl -r $(GHDL_FLAGS) bne_tb --stop-time=600ns --wave=bne_tb.ghw; \
+	ghdl -r $(GHDL_FLAGS) blt_tb --stop-time=600ns --wave=blt_tb.ghw; \
 	cd ..
 
 view:

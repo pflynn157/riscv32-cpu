@@ -179,6 +179,11 @@ begin
                         end if;
                     
                     -- BLT
+                    when "100" =>
+                        if signed(Result) < 0 then
+                            instr <= X"00000000";
+                            PC <= std_logic_vector(signed(PC) + signed(SrcImm_In) - 2); 
+                        end if;
                     
                     -- BGE
                     
