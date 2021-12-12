@@ -204,6 +204,7 @@ begin
             elsif Br_Stage = 3 then
                 O_PC <= PC;
                 Br_Stage <= 1;
+                B_Inv <= '0';
                 Br <= '0';
             end if;
             
@@ -260,9 +261,13 @@ begin
                         -- Branch instructions
                         when "1100011" =>
                             Br <= '1';
-                            srcImm_In <= "00000000000000000000" & Imm2 & Imm1;
                             WB_stall <= 1;
                             Br_Op <= funct3;
+                            if Imm2(6) = '1' then
+                                srcImm_In <= "11111111111111111111" & Imm2 & Imm1;
+                            else
+                                srcImm_In <= "00000000000000000000" & Imm2 & Imm1;
+                            end if;
                             
                         -- Load instructions
                         when "0000011" =>
@@ -290,6 +295,7 @@ begin
                             srcImm <= '1';
                             MemWrite <= '1';
                             Mem_Stall <= '1';
+                            Mem_SX <= '0';
                             case funct3 is
                                 when "000" => Data_Len <= "00";
                                 when "001" => Data_Len <= "01";

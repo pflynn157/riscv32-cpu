@@ -46,7 +46,7 @@ compile:
 
 run:
 	cd sim; \
-	ghdl -r $(GHDL_FLAGS) cpu_tb --stop-time=800ns --wave=cpu_tb.ghw; \
+	ghdl -r $(GHDL_FLAGS) cpu_tb --stop-time=1300ns --wave=cpu_tb.ghw; \
 	ghdl -r $(GHDL_FLAGS) cpu_tb1 --stop-time=1500ns --wave=cpu_test.ghw; \
 	ghdl -r $(GHDL_FLAGS) beq_tb --stop-time=800ns --wave=beq_tb.ghw; \
 	ghdl -r $(GHDL_FLAGS) bne_tb --stop-time=800ns --wave=bne_tb.ghw; \
