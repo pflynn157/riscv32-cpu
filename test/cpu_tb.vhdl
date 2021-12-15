@@ -78,26 +78,18 @@ architecture Behavior of cpu_tb is
     constant X4 : std_logic_vector := "00100";
     
     -- Our test programs
-    constant SIZE1 : integer := 17;
+    constant SIZE1 : integer := 9;
     type instr_memory1 is array (0 to (SIZE1 - 1)) of std_logic_vector(31 downto 0);
     signal rom_memory1 : instr_memory1 := (
-        "0000000" & X0 & X0 & ALU_ADD & X1 & ALU_R_OP,    --[ 0] ADD X1, X0, X0  -> i
-        "000000001010" & X0 & ALU_ADD & X2 & ALU_I_OP,    --[ 1] ADDI X2, X0, 10  -> MAX
+        "0000000" & X0 & X0 & ALU_ADD & X1 & ALU_R_OP,    --[ 0] ADD X1, X0, X0
+        "000000001010" & X0 & ALU_ADD & X2 & ALU_I_OP,    --[ 1] ADDI X2, X0, 10
         "0000000" & X0 & X0 & ALU_ADD & X3 & ALU_R_OP,    --[ 2] ADD X3, X0, X0
         NOP,                                              --[ 3] NOP
-        "0000000" & X0 & X3 & "010" & "00000" & STORE_OP, --[ 4] SW X3, [X0, 0]
+        "0000000" & X0 & X2 & "010" & "00000" & STORE_OP, --[ 4] SW X2, [X0, 0]
         NOP,                                              --[ 5] NOP
-        "0000000" & X2 & X1 & "101" & "01001" & BR_OP,    --[ 6] BGE X1, X2, 9
-        "000000000000" & X0 & "010" & X3 & LOAD_OP,       --[ 7] LW X3, [X0, 0]
-        NOP,                                              --[ 8] NOP
-        "0000000" & X1 & X3 & ALU_ADD & X3 & ALU_R_OP,    --[ 9] ADD X3, X3, X1
-        NOP,                                              --[10] NOP
-        "0000000" & X0 & X3 & "010" & "00000" & STORE_OP, --[11] SW X3, [X0, 0]
-        "000000000001" & X1 & ALU_ADD & X1 & ALU_I_OP,    --[12] ADDI X1, X1, 1
-        NOP,                                              --[13] NOP
-        "1111111" & X0 & X0 & "000" & "10111" & BR_OP,    --[14] BEQ X0, X0, -7
-        "0000000" & X0 & X0 & ALU_ADD & X1 & ALU_R_OP,    --[15] ADD X1, X0, X0
-        "0000000" & X0 & X0 & ALU_ADD & X2 & ALU_R_OP     --[16] ADD X2, X0, X0
+        "000000000101" & X0 & ALU_ADD & X3 & ALU_I_OP,    --[ 6] ADDI X3, X0, 5
+        "000000000110" & X0 & ALU_ADD & X2 & ALU_I_OP,    --[ 7] ADDI X2, X0, 6
+        NOP												  --[ 8] NOP
     );
 begin
     uut : CPU port map (
