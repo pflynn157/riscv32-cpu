@@ -96,7 +96,7 @@ architecture Behavior of CPU is
 
     -- Pipeline and program counter signals
     signal PC : std_logic_vector(31 downto 0) := X"00000000";
-    signal IF_stall, MEM_stall : std_logic := '0';
+    signal IF_stall : std_logic := '0';
     signal WB_stall : integer := 0;
 begin
     -- Connect the decoder
@@ -229,7 +229,6 @@ begin
                     B_Inv1 <= '0';
                     RegWrite <= '0';
                     MemWrite <= '0';
-                    Mem_Stall <= '0';
                     MemRead <= '0';
                     Mem_SX <= '0';
                     Br <= '0';
@@ -294,7 +293,6 @@ begin
                             sel_B <= rs1;
                             srcImm <= '1';
                             MemWrite <= '1';
-                            Mem_Stall <= '1';
                             Mem_SX <= '0';
                             case funct3 is
                                 when "000" => Data_Len <= "00";
@@ -341,7 +339,7 @@ begin
                     end if;
                 
                 -- Memory
-                elsif stage = 4 and Mem_Stall = '0' then
+                elsif stage = 4 then
                     O_Mem_Write <= MemWrite2;
                     O_Mem_Read <= MemRead2;
                     O_Mem_Address <= Result;
@@ -351,8 +349,6 @@ begin
                     if MemWrite2 = '1' then
                         O_Mem_Data <= MemData;
                     end if;
-                elsif stage = 4 and Mem_Stall = '1' then
-                    Mem_Stall <= '0';
                 
                 -- Write-back
                 elsif stage = 5 and WB_Stall = 0 then

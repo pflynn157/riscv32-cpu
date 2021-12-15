@@ -1,13 +1,13 @@
 [*]
 [*] GTKWave Analyzer v3.3.109 (w)1999-2020 BSI
-[*] Sun Dec 12 20:44:50 2021
+[*] Wed Dec 15 13:38:53 2021
 [*]
 [dumpfile] "/home/patrick/Projects/riscv32-cpu/sim/forloop_tb.ghw"
-[dumpfile_mtime] "Sun Dec 12 20:44:42 2021"
-[dumpfile_size] 2119256
-[savefile] "/home/patrick/Projects/riscv32-cpu/cpu.gtkw"
+[dumpfile_mtime] "Wed Dec 15 13:38:17 2021"
+[dumpfile_size] 2119211
+[savefile] "/home/patrick/Projects/riscv32-cpu/forloop.gtkw"
 [timestart] 0
-[size] 1920 1052
+[size] 1920 1011
 [pos] -1 -1
 *-27.484051 1299000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
