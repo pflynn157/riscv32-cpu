@@ -1,10 +1,10 @@
 [*]
 [*] GTKWave Analyzer v3.3.109 (w)1999-2020 BSI
-[*] Wed Dec 15 13:38:53 2021
+[*] Wed Dec 15 13:54:14 2021
 [*]
 [dumpfile] "/home/patrick/Projects/riscv32-cpu/sim/forloop_tb.ghw"
-[dumpfile_mtime] "Wed Dec 15 13:38:17 2021"
-[dumpfile_size] 2119211
+[dumpfile_mtime] "Wed Dec 15 13:54:04 2021"
+[dumpfile_size] 2121782
 [savefile] "/home/patrick/Projects/riscv32-cpu/forloop.gtkw"
 [timestart] 0
 [size] 1920 1011
@@ -34,8 +34,6 @@ top.forloop_tb.uut.o_mem_read
 #{top.forloop_tb.uut.i_mem_data[31:0]} top.forloop_tb.uut.i_mem_data[31] top.forloop_tb.uut.i_mem_data[30] top.forloop_tb.uut.i_mem_data[29] top.forloop_tb.uut.i_mem_data[28] top.forloop_tb.uut.i_mem_data[27] top.forloop_tb.uut.i_mem_data[26] top.forloop_tb.uut.i_mem_data[25] top.forloop_tb.uut.i_mem_data[24] top.forloop_tb.uut.i_mem_data[23] top.forloop_tb.uut.i_mem_data[22] top.forloop_tb.uut.i_mem_data[21] top.forloop_tb.uut.i_mem_data[20] top.forloop_tb.uut.i_mem_data[19] top.forloop_tb.uut.i_mem_data[18] top.forloop_tb.uut.i_mem_data[17] top.forloop_tb.uut.i_mem_data[16] top.forloop_tb.uut.i_mem_data[15] top.forloop_tb.uut.i_mem_data[14] top.forloop_tb.uut.i_mem_data[13] top.forloop_tb.uut.i_mem_data[12] top.forloop_tb.uut.i_mem_data[11] top.forloop_tb.uut.i_mem_data[10] top.forloop_tb.uut.i_mem_data[9] top.forloop_tb.uut.i_mem_data[8] top.forloop_tb.uut.i_mem_data[7] top.forloop_tb.uut.i_mem_data[6] top.forloop_tb.uut.i_mem_data[5] top.forloop_tb.uut.i_mem_data[4] top.forloop_tb.uut.i_mem_data[3] top.forloop_tb.uut.i_mem_data[2] top.forloop_tb.uut.i_mem_data[1] top.forloop_tb.uut.i_mem_data[0]
 @28
 top.forloop_tb.uut.if_stall
-@420
-top.forloop_tb.uut.wb_stall
 @200
 -
 @24

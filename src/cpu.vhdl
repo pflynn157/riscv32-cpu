@@ -87,12 +87,12 @@ architecture Behavior of CPU is
     -- Intermediate signals for the pipeline
     signal sel_D_1, sel_D_2 : std_logic_vector(4 downto 0);
     signal srcImm, RegWrite, RegWrite2, MemWrite, MemWrite2 : std_logic := '0';
-    signal MemRead, MemRead2, Mem_SX, Mem_SX2 : std_logic := '0';
+    signal MemRead, MemRead2, MemRead3, Mem_SX, Mem_SX2 : std_logic := '0';
     signal MemData, srcImm_In : std_logic_vector(31 downto 0);
     signal Data_Len, Data_Len2 : std_logic_vector(1 downto 0);
     signal Br_Op : std_logic_vector(2 downto 0);
     signal Br : std_logic := '0';
-    signal Br_stage : integer := 1;
+    signal Br_stage, Mem_stage : integer := 1;
 
     -- Pipeline and program counter signals
     signal PC : std_logic_vector(31 downto 0) := X"00000000";
@@ -208,6 +208,24 @@ begin
                 Br <= '0';
             end if;
             
+        -- The memory-read processor
+        -- This is a 2-stage processor: the first sets the address, the second reads the result
+        elsif rising_edge(clk) and MemRead2 = '1' then
+        	-- Set data
+            if Mem_Stage = 1 then
+                O_Mem_Read <= '1';
+                O_Mem_Address <= Result;
+                O_Data_Len <= Data_Len2;
+                O_Mem_SX <= Mem_SX2;
+                Mem_Stage <= 2;
+		        
+		    -- Read data
+	        elsif Mem_Stage = 2 then
+	        	Mem_Stage <= 1;
+		        MemRead2 <= '0';
+		        MemRead3 <= '1';
+	        end if;
+            
         -- The main CPU
         elsif rising_edge(clk) and En_Debug = '0' and Br = '0' then
             for stage in 1 to 5 loop
@@ -274,8 +292,6 @@ begin
                             ALU_op1 <= "000";
                             srcImm <= '1';
                             MemRead <= '1';
-                            WB_Stall <= 2;
-                            IF_stall <= '1';
                             RegWrite <= '1';
                             Mem_SX <= not funct3(2);
                             case funct3 is
@@ -339,9 +355,8 @@ begin
                     end if;
                 
                 -- Memory
-                elsif stage = 4 then
+                elsif stage = 4 and MemRead2 = '0' then
                     O_Mem_Write <= MemWrite2;
-                    O_Mem_Read <= MemRead2;
                     O_Mem_Address <= Result;
                     O_Data_Len <= Data_Len2;
                     O_Mem_SX <= Mem_SX2;
@@ -351,13 +366,14 @@ begin
                     end if;
                 
                 -- Write-back
-                elsif stage = 5 and WB_Stall = 0 then
+                elsif stage = 5 and WB_stall = 0 then
                     if RegWrite2 = '1' then
                         sel_D <= sel_D_2;
                         I_enD <= '1';
                         
-                        if MemRead2 = '1' then
+                        if MemRead3 = '1' then
                             I_dataD <= I_Mem_Data;
+                            MemRead3 <= '0';
                         else
                             I_dataD <= Result;
                         end if;
@@ -367,8 +383,8 @@ begin
                     
                     -- Prepare for instrution fetch on next cycle
                     O_PC <= PC;
-                elsif stage = 5 and WB_Stall > 0 then
-                    WB_Stall <= WB_stall - 1;
+                elsif stage = 5 and WB_stall > 0 then
+                    WB_stall <= WB_stall - 1;
                 end if;
             end loop;
         end if;
