@@ -78,21 +78,20 @@ architecture Behavior of cpu_tb is
     constant X4 : std_logic_vector := "00100";
     
     -- Our test programs
-    constant SIZE1 : integer := 12;
+    constant SIZE1 : integer := 11;
     type instr_memory1 is array (0 to (SIZE1 - 1)) of std_logic_vector(31 downto 0);
     signal rom_memory1 : instr_memory1 := (
         "0000000" & X0 & X0 & ALU_ADD & X1 & ALU_R_OP,    --[ 0] ADD X1, X0, X0
-        "000000001010" & X0 & ALU_ADD & X2 & ALU_I_OP,    --[ 1] ADDI X2, X0, 10
-        "0000000" & X0 & X0 & ALU_ADD & X3 & ALU_R_OP,    --[ 2] ADD X3, X0, X0
-        NOP,                                              --[ 3] NOP
-        "0000000" & X0 & X2 & "010" & "00000" & STORE_OP, --[ 4] SW X2, [X0, 0]
-        "0000000" & X0 & X3 & "010" & "00100" & STORE_OP, --[ 5] SW X3, [X0, 4]
-        NOP,                                              --[ 6] NOP
-        "000000000101" & X0 & ALU_ADD & X3 & ALU_I_OP,    --[ 7] ADDI X3, X0, 5
-        "000000000110" & X0 & ALU_ADD & X2 & ALU_I_OP,    --[ 8] ADDI X2, X0, 6
-        NOP,                                              --[ 9] NOP
-        "000000000000" & X0 & "010" & X4 & LOAD_OP,       --[10] LW X4, [X0, 0]
-        NOP												  --[11] NOP
+        "0000000" & X0 & X0 & ALU_ADD & X3 & ALU_R_OP,    --[ 1] ADD X3, X0, X0
+        "000000001010" & X0 & ALU_ADD & X2 & ALU_I_OP,    --[ 2] ADDI X2, X0, 10
+        "0000000" & X0 & X2 & "010" & "00000" & STORE_OP, --[ 3] SW X2, [X0, 0]
+        "0000000" & X0 & X3 & "010" & "00100" & STORE_OP, --[ 4] SW X3, [X0, 4]
+        NOP,                                              --[ 5] NOP
+        "000000000101" & X0 & ALU_ADD & X3 & ALU_I_OP,    --[ 6] ADDI X3, X0, 5
+        "000000000110" & X0 & ALU_ADD & X2 & ALU_I_OP,    --[ 7] ADDI X2, X0, 6
+        NOP,                                              --[ 8] NOP
+        "000000000000" & X0 & "010" & X4 & LOAD_OP,       --[ 9] LW X4, [X0, 0]
+        NOP												  --[10] NOP
     );
 begin
     uut : CPU port map (

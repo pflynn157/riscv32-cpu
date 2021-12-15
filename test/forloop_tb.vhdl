@@ -78,13 +78,13 @@ architecture Behavior of forloop_tb is
     constant X4 : std_logic_vector := "00100";
     
     -- Our test programs
-    constant SIZE1 : integer := 17;
+    constant SIZE1 : integer := 16;
     type instr_memory1 is array (0 to (SIZE1 - 1)) of std_logic_vector(31 downto 0);
     signal rom_memory1 : instr_memory1 := (
         "0000000" & X0 & X0 & ALU_ADD & X1 & ALU_R_OP,    --[ 0] ADD X1, X0, X0  -> i
         "000000001010" & X0 & ALU_ADD & X2 & ALU_I_OP,    --[ 1] ADDI X2, X0, 10  -> MAX
         "0000000" & X0 & X0 & ALU_ADD & X3 & ALU_R_OP,    --[ 2] ADD X3, X0, X0
-        NOP,                                              --[ 3] NOP
+        --NOP,                                              --[ 3] NOP
         "0000000" & X0 & X3 & "010" & "00000" & STORE_OP, --[ 4] SW X3, [X0, 0]
         NOP,                                              --[ 5] NOP
         "0000000" & X2 & X1 & "101" & "01001" & BR_OP,    --[ 6] BGE X1, X2, 9

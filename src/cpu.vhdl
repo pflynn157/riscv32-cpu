@@ -231,12 +231,8 @@ begin
             for stage in 1 to 5 loop
                 -- Instruction fetch
                 if stage = 1 and IF_stall = '0' then
-                    if opcode = "0000011" then
-                        instr <= X"00000000";
-                    else
-                        PC <= std_logic_vector(unsigned(PC) + 1);
-                        instr <= I_instr;
-                    end if;
+                    PC <= std_logic_vector(unsigned(PC) + 1);
+                    instr <= I_instr;
                     
                 -- Instruction decode
                 elsif stage = 2 and IF_stall = '0' then
@@ -323,6 +319,9 @@ begin
                     
                     -- Check to see if we have a RAW dependency. If so, stall the pipeline
                     if opcode = "0100011" then
+                        if sel_D_1 = rs1 then
+                            IF_stall <= '1';
+                        end if;
                     elsif opcode = "0000011" then
                     elsif opcode = "0000000" then
                     else
