@@ -31,4 +31,11 @@ The following instructions are supported:
 * XOR
 * OR
 * AND
+* SLLI
+* SRLI
+* SRAI
+* SLL
+* SRL
+* SRA
+
 
