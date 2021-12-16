@@ -263,19 +263,19 @@ begin
         
         -- Enter debug mode
         En_Debug <= '1';
-        Reg_Check("00100", X"00000BCD", "Debug failed-> Invalid register X4 (!= 0xBCD)");
-        Reg_Check("00101", X"00FFABCD", "Debug failed-> Invalid register X5 (!= OXFFABCD)");
+        Reg_Check("00100", X"FFFFFBCD", "Debug failed-> Invalid register X4 (!= 0xFFFFFBCD)");
+        Reg_Check("00101", X"00FF9BCD", "Debug failed-> Invalid register X5 (!= 0XFF9BCD)");
         Mem_Check(1, X"00000005", "Mem[0][0] invalid");
         Mem_Check(2, X"00000008", "Mem[0][4] invalid");
         Mem_Check(3, X"00000005", "Mem[2][0] invalid");
-        Mem_Check(4, X"00000BCD", "Mem[2][1] invalid");
-        Mem_Check(5, X"00FFABCD", "Mem[2][3] invalid");
+        Mem_Check(4, X"0000FBCD", "Mem[2][1] invalid");
+        Mem_Check(5, X"00FF9BCD", "Mem[2][3] invalid");
         Reg_Check("01001", X"00000005", "Debug failed-> Invalid register X9 (!= 5)");
         Reg_Check("01010", X"111111CD", "Debug failed-> Invalid register X10 (!= 0x111111CD)");
-        Reg_Check("01011", X"1111ABCD", "Debug failed-> Invalid register X11 (!= 0x1111ABCD)");
-        Reg_Check("01100", X"00FFABCD", "Debug failed-> Invalid register X12 (!= 0x00FFABCD)");
+        Reg_Check("01011", X"11119BCD", "Debug failed-> Invalid register X11 (!= 0x1111ABCD)");
+        Reg_Check("01100", X"00FF9BCD", "Debug failed-> Invalid register X12 (!= 0x00FFABCD)");
         Reg_Check("01101", X"000000CD", "Debug failed-> Invalid register X13 (!= 0xCD)");
-        Reg_Check("01110", X"0000ABCD", "Debug failed-> Invalid register X14 (!= 0xABCD)");
+        Reg_Check("01110", X"00009BCD", "Debug failed-> Invalid register X14 (!= 0xABCD)");
         
         wait;
     end process;

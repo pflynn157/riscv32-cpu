@@ -86,24 +86,35 @@ architecture Behavior of slt_tb is
     constant X8 : std_logic_vector := "01000";
     constant X9 : std_logic_vector := "01001";
     constant X10 : std_logic_vector := "01010";
+    constant X11 : std_logic_vector := "01011";
     
     -- Our test programs
-    constant SIZE1 : integer := 13;
+    constant SIZE1 : integer := 23;
     type instr_memory1 is array (0 to (SIZE1 - 1)) of std_logic_vector(31 downto 0);
     signal rom_memory1 : instr_memory1 := (
-        "000000000011" & X0 & ALU_ADD & X1 & ALU_I_OP,    --[ 1] ADDI X1, X0, 3
+        "000000000011" & X0 & ALU_ADD & X1 & ALU_I_OP,    --[ 0] ADDI X1, X0, 3
         "000000000100" & X0 & ALU_ADD & X2 & ALU_I_OP,    --[ 1] ADDI X2, X0, 4
-        "111111111011" & X0 & ALU_ADD & X3 & ALU_I_OP,    --[ 1] ADDI X3, X0, -5
-        "000000000010" & X0 & ALU_ADD & X4 & ALU_I_OP,    --[ 1] ADDI X4, X0, 2
-        "000000000010" & X0 & ALU_ADD & X5 & ALU_I_OP,    --[ 1] ADDI X5, X0, 2
-        "000000000010" & X0 & ALU_ADD & X6 & ALU_I_OP,    --[ 1] ADDI X6, X0, 2
-        "000000000010" & X0 & ALU_ADD & X7 & ALU_I_OP,    --[ 1] ADDI X7, X0, 2
-        NOP,											  --[15] NOP
-        "0000000" & X2 & X1 & ALU_SLT & X4 & ALU_R_OP,    --[13] SLT X4, X1, X2  (X4 == 1)
+        "111111111011" & X0 & ALU_ADD & X3 & ALU_I_OP,    --[ 2] ADDI X3, X0, -5
+        "000000000010" & X0 & ALU_ADD & X4 & ALU_I_OP,    --[ 3] ADDI X4, X0, 2
+        "000000000010" & X0 & ALU_ADD & X5 & ALU_I_OP,    --[ 4] ADDI X5, X0, 2
+        "000000000010" & X0 & ALU_ADD & X6 & ALU_I_OP,    --[ 5] ADDI X6, X0, 2
+        "000000000010" & X0 & ALU_ADD & X7 & ALU_I_OP,    --[ 6] ADDI X7, X0, 2
+        "000000000010" & X0 & ALU_ADD & X8 & ALU_I_OP,    --[ 7] ADDI X8, X0, 2
+        "000000000010" & X0 & ALU_ADD & X9 & ALU_I_OP,    --[ 8] ADDI X9, X0, 2
+        "000000000010" & X0 & ALU_ADD & X10 & ALU_I_OP,   --[ 9] ADDI X10, X0, 2
+        "000000000010" & X0 & ALU_ADD & X11 & ALU_I_OP,   --[10] ADDI X11, X0, 2
+        NOP,											  --[11] NOP
+        "0000000" & X2 & X1 & ALU_SLT & X4 & ALU_R_OP,    --[12] SLT X4, X1, X2  (X4 == 1)
         "0000000" & X1 & X2 & ALU_SLT & X5 & ALU_R_OP,    --[13] SLT X5, X2, X1  (X5 == 0)
-        "0000000" & X1 & X3 & ALU_SLT & X6 & ALU_R_OP,    --[13] SLT X6, X3, X1  (X5 == 1)
-        "0000000" & X1 & X3 & ALU_SLTU & X7 & ALU_R_OP,   --[13] SLTU X7, X3, X1  (X5 == 0)
-        NOP 											  --[15] NOP
+        "0000000" & X1 & X3 & ALU_SLT & X6 & ALU_R_OP,    --[14] SLT X6, X3, X1  (X6 == 1)
+        "0000000" & X1 & X3 & ALU_SLTU & X7 & ALU_R_OP,   --[15] SLTU X7, X3, X1  (X7 == 0)
+        NOP,											  --[16] NOP
+        NOP,											  --[17] NOP
+        "000000000100" & X1 & ALU_SLT & X8 & ALU_I_OP,    --[18] SLTI X8, X1, 4		(X8 == 1)
+        "000000000011" & X2 & ALU_SLT & X9 & ALU_I_OP,    --[19] SLTI X9, X2, 3  	(X9 == 0)
+        "000000000011" & X3 & ALU_SLT & X10 & ALU_I_OP,   --[20] SLTI X10, X3, 3		(X10 == 1)
+        "000000000011" & X3 & ALU_SLTU & X11 & ALU_I_OP,  --[21] SLTIU X11, X3, 3	(X11 == 0)
+        NOP 											  --[22] NOP
     );
 begin
     uut : CPU port map (
@@ -178,6 +189,10 @@ begin
         Reg_Check(X5, X"00000000", "Debug failed-> Invalid register X5");
         Reg_Check(X6, X"00000001", "Debug failed-> Invalid register X6");
         Reg_Check(X7, X"00000000", "Debug failed-> Invalid register X7");
+        Reg_Check(X8, X"00000001", "Debug failed-> Invalid register X8");
+        Reg_Check(X9, X"00000000", "Debug failed-> Invalid register X9");
+        Reg_Check(X10, X"00000001", "Debug failed-> Invalid register X10");
+        Reg_Check(X11, X"00000000", "Debug failed-> Invalid register X11");
         
         -- Reset the CPU
         En_Debug <= '0';

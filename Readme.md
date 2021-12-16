@@ -37,5 +37,7 @@ The following instructions are supported:
 * SLL
 * SRL
 * SRA
+* SLT/SLTU
+* SLTI/SLTI
 
 
