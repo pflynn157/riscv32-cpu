@@ -16,7 +16,8 @@ SIMFILES	= test/decoder_tb.vhdl \
            test/blt_tb.vhdl \
            test/bge_tb.vhdl \
            test/forloop_tb.vhdl \
-           test/shift_tb.vhdl
+           test/shift_tb.vhdl \
+           test/slt_tb.vhdl
 
 # GHDL
 GHDL_CMD	= ghdl
@@ -47,6 +48,7 @@ compile:
 	ghdl -e -o sim/bge_tb $(GHDL_FLAGS) $(GHDL_WORKDIR) bge_tb
 	ghdl -e -o sim/forloop_tb $(GHDL_FLAGS) $(GHDL_WORKDIR) forloop_tb
 	ghdl -e -o sim/shift_tb $(GHDL_FLAGS) $(GHDL_WORKDIR) shift_tb
+	ghdl -e -o sim/slt_tb $(GHDL_FLAGS) $(GHDL_WORKDIR) slt_tb
 
 run:
 	cd sim; \
@@ -58,6 +60,7 @@ run:
 	ghdl -r $(GHDL_FLAGS) bge_tb --stop-time=800ns --wave=bge_tb.ghw; \
 	ghdl -r $(GHDL_FLAGS) forloop_tb --stop-time=1300ns --wave=forloop_tb.ghw; \
 	ghdl -r $(GHDL_FLAGS) shift_tb --stop-time=450ns --wave=shift_tb.ghw; \
+	ghdl -r $(GHDL_FLAGS) slt_tb --stop-time=250ns --wave=slt_tb.ghw; \
 	cd ..
 
 view:

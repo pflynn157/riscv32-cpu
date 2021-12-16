@@ -32,9 +32,19 @@ begin
             
             -- SLT
             when "010" =>
+                if signed(A) < signed(B) then
+                    Result <= X"00000001";
+                else
+                    Result <= X"00000000";
+                end if;
             
             -- SLTU
             when "011" =>
+                if unsigned(A) < unsigned(B) then
+                    Result <= X"00000001";
+                else
+                    Result <= X"00000000";
+                end if;
             
             -- XOR
             when "100" =>

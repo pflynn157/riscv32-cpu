@@ -253,11 +253,17 @@ begin
                             ALU_op1 <= funct3;
                             RegWrite <= '1';
                             if opcode(5) = '0' then
+                                -- If shift-immediate, we have to use slightly different format
                                 if funct3 = "001" or funct3 = "101" then
                                     srcImm_In <= "000000000000000000000000000" & rs2;
                                     B_Inv1 <= imm2(5);
                                 else
-                                    srcImm_In <= "00000000000000000000" & Imm;
+                                    -- Sign-extend immediate
+                                    if Imm(11) = '1' then
+                                        srcImm_In <= "11111111111111111111" & Imm;
+                                    else
+                                        srcImm_In <= "00000000000000000000" & Imm;
+                                    end if;
                                 end if;
                                 srcImm <= '1';
                             end if;
