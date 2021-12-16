@@ -106,6 +106,23 @@ architecture Behavior of shift_tb is
         "0000000" & X1 & X2 & ALU_SRL & X10 & ALU_R_OP,   --[14] SRL X10, X2, X1
         NOP 											  --[15] NOP
     );
+    
+    constant SIZE2 : integer := 12;
+    type instr_memory2 is array (0 to (SIZE2 - 1)) of std_logic_vector(31 downto 0);
+    signal rom_memory2 : instr_memory2 := (
+        "000000000011" & X0 & ALU_ADD & X2 & ALU_I_OP,    --[ 1] ADDI X2, X0, 3
+        "111111111111" & X0 & ALU_ADD & X3 & ALU_I_OP,    --[ 2] ADDI X3, X0, FFFF
+        "111111111111" & X0 & ALU_ADD & X4 & ALU_I_OP,    --[ 3] ADDI X4, X0, FFFF
+        "11111111" & X"FFF" & X3 & "0110111",             --[ 4] LUI X3, 0xFFF
+        "01111111" & X"FFF" & X4 & "0110111",             --[ 5] LUI X4, 0x0FF
+        "0000000" & X1 & X2 & ALU_SLL & X5 & ALU_I_OP,    --[ 6] SLLI X5, X2, 1
+        "0000000" & X1 & X2 & ALU_SRL & X6 & ALU_I_OP,    --[ 7] SRLI X6, X2, 1
+        "0100000" & X1 & X3 & ALU_SRL & X7 & ALU_I_OP,    --[ 8] SRAI X7, X3, 1
+        "0100000" & X1 & X4 & ALU_SRL & X8 & ALU_I_OP,    --[ 9] SRAI X8, X4, 1
+        "0000000" & X3 & X2 & ALU_SLL & X9 & ALU_I_OP,    --[13] SLLI X9, X2, 3
+        "0000000" & X3 & X2 & ALU_SRL & X10 & ALU_I_OP,   --[14] SRLI X10, X2, 3
+        NOP 											  --[15] NOP
+    );
 begin
     uut : CPU port map (
         clk => clk,
@@ -185,6 +202,23 @@ begin
         -- Reset the CPU
         En_Debug <= '0';
         CPU_Reset;
+        
+        -- Run the second program
+        for i in 0 to (SIZE2 - 1) loop
+            I_instr <= rom_memory2(i);
+            wait until O_PC'event;
+        end loop;
+        wait for clk_period * 6;
+        
+        En_Debug <= '1';
+        Reg_Check(X2, X"00000003", "Debug failed-> Invalid register X2");
+        Reg_Check(X3, X"FFFFFFFF", "Debug failed-> Invalid register X3");
+        Reg_Check(X4, X"7FFFFFFF", "Debug failed-> Invalid register X4");
+        Reg_Check(X5, X"00000006", "Debug failed-> Invalid register X5");
+        Reg_Check(X6, X"00000001", "Debug failed-> Invalid register X6");
+        Reg_Check(X7, X"FFFFFFFF", "Debug failed-> Invalid register X7");
+        Reg_Check(X8, X"3FFFFFFF", "Debug failed-> Invalid register X8");
+        Reg_Check(X9, X"00000018", "Debug failed-> Invalid register X9");
         
         wait;
     end process;

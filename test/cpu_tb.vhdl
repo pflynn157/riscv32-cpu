@@ -86,24 +86,20 @@ architecture Behavior of cpu_tb is
     constant X10 : std_logic_vector := "01010";
     
     -- Our test programs
-    constant SIZE1 : integer := 16;
+    constant SIZE1 : integer := 12;
     type instr_memory1 is array (0 to (SIZE1 - 1)) of std_logic_vector(31 downto 0);
     signal rom_memory1 : instr_memory1 := (
-        "000000000001" & X0 & ALU_ADD & X1 & ALU_I_OP,    --[ 0] ADDI X1, X0, 1
         "000000000011" & X0 & ALU_ADD & X2 & ALU_I_OP,    --[ 1] ADDI X2, X0, 3
         "111111111111" & X0 & ALU_ADD & X3 & ALU_I_OP,    --[ 2] ADDI X3, X0, FFFF
         "111111111111" & X0 & ALU_ADD & X4 & ALU_I_OP,    --[ 3] ADDI X4, X0, FFFF
         "11111111" & X"FFF" & X3 & "0110111",             --[ 4] LUI X3, 0xFFF
         "01111111" & X"FFF" & X4 & "0110111",             --[ 5] LUI X4, 0x0FF
-        "0000000" & X1 & X2 & ALU_SLL & X5 & ALU_R_OP,    --[ 6] SLL X5, X2, X1
-        "0000000" & X1 & X2 & ALU_SRL & X6 & ALU_R_OP,    --[ 7] SRL X6, X2, X1
-        "0100000" & X1 & X3 & ALU_SRL & X7 & ALU_R_OP,    --[ 8] SRA X7, X3, X1
-        "0100000" & X1 & X4 & ALU_SRL & X8 & ALU_R_OP,    --[ 9] SRA X8, X4, X1
-        "000000000011" & X0 & ALU_ADD & X1 & ALU_I_OP,    --[10] ADDI X1, X0, 3
-        NOP,											  --[11] NOP
-        NOP,											  --[12] NOP
-        "0000000" & X1 & X2 & ALU_SLL & X9 & ALU_R_OP,    --[13] SLL X9, X2, X1
-        "0000000" & X1 & X2 & ALU_SRL & X10 & ALU_R_OP,   --[14] SRL X10, X2, X1
+        "0000000" & X1 & X2 & ALU_SLL & X5 & ALU_I_OP,    --[ 6] SLLI X5, X2, 1
+        "0000000" & X1 & X2 & ALU_SRL & X6 & ALU_I_OP,    --[ 7] SRLI X6, X2, 1
+        "0100000" & X1 & X3 & ALU_SRL & X7 & ALU_I_OP,    --[ 8] SRAI X7, X3, 1
+        "0100000" & X1 & X4 & ALU_SRL & X8 & ALU_I_OP,    --[ 9] SRAI X8, X4, 1
+        "0000000" & X3 & X2 & ALU_SLL & X9 & ALU_I_OP,    --[13] SLLI X9, X2, 3
+        "0000000" & X3 & X2 & ALU_SRL & X10 & ALU_I_OP,   --[14] SRLI X10, X2, 3
         NOP 											  --[15] NOP
     );
 begin

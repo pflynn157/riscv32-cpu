@@ -57,7 +57,7 @@ run:
 	ghdl -r $(GHDL_FLAGS) blt_tb --stop-time=800ns --wave=blt_tb.ghw; \
 	ghdl -r $(GHDL_FLAGS) bge_tb --stop-time=800ns --wave=bge_tb.ghw; \
 	ghdl -r $(GHDL_FLAGS) forloop_tb --stop-time=1300ns --wave=forloop_tb.ghw; \
-	ghdl -r $(GHDL_FLAGS) shift_tb --stop-time=300ns --wave=shift_tb.ghw; \
+	ghdl -r $(GHDL_FLAGS) shift_tb --stop-time=450ns --wave=shift_tb.ghw; \
 	cd ..
 
 view:
