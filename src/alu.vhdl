@@ -28,6 +28,7 @@ begin
             
             -- SLL
             when "001" =>
+                Result <= std_logic_vector(shift_left(unsigned(A), to_integer(unsigned(B))));
             
             -- SLT
             when "010" =>
@@ -42,6 +43,11 @@ begin
             -- SRL/SRA
             -- SRA if B_Inv = 1
             when "101" =>
+                if B_Inv = '1' then
+                    Result <= std_logic_vector(shift_right(signed(A), to_integer(unsigned(B))));
+                else
+                    Result <= std_logic_vector(shift_right(unsigned(A), to_integer(unsigned(B))));
+                end if;
             
             -- OR
             when "110" =>
