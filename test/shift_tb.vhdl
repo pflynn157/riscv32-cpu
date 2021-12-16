@@ -191,12 +191,12 @@ begin
         En_Debug <= '1';
         Reg_Check(X1, X"00000003", "Debug failed-> Invalid register X1");
         Reg_Check(X2, X"00000003", "Debug failed-> Invalid register X2");
-        Reg_Check(X3, X"FFFFFFFF", "Debug failed-> Invalid register X3");
-        Reg_Check(X4, X"7FFFFFFF", "Debug failed-> Invalid register X4");
+        Reg_Check(X3, X"FFFFEFFF", "Debug failed-> Invalid register X3");
+        Reg_Check(X4, X"7FFFEFFF", "Debug failed-> Invalid register X4");
         Reg_Check(X5, X"00000006", "Debug failed-> Invalid register X5");
         Reg_Check(X6, X"00000001", "Debug failed-> Invalid register X6");
-        Reg_Check(X7, X"FFFFFFFF", "Debug failed-> Invalid register X7");
-        Reg_Check(X8, X"3FFFFFFF", "Debug failed-> Invalid register X8");
+        Reg_Check(X7, X"FFFFF7FF", "Debug failed-> Invalid register X7");
+        Reg_Check(X8, X"3FFFF7FF", "Debug failed-> Invalid register X8");
         Reg_Check(X9, X"00000018", "Debug failed-> Invalid register X9");
         
         -- Reset the CPU
@@ -212,12 +212,12 @@ begin
         
         En_Debug <= '1';
         Reg_Check(X2, X"00000003", "Debug failed-> Invalid register X2");
-        Reg_Check(X3, X"FFFFFFFF", "Debug failed-> Invalid register X3");
-        Reg_Check(X4, X"7FFFFFFF", "Debug failed-> Invalid register X4");
+        Reg_Check(X3, X"FFFFEFFF", "Debug failed-> Invalid register X3");
+        Reg_Check(X4, X"7FFFEFFF", "Debug failed-> Invalid register X4");
         Reg_Check(X5, X"00000006", "Debug failed-> Invalid register X5");
         Reg_Check(X6, X"00000001", "Debug failed-> Invalid register X6");
-        Reg_Check(X7, X"FFFFFFFF", "Debug failed-> Invalid register X7");
-        Reg_Check(X8, X"3FFFFFFF", "Debug failed-> Invalid register X8");
+        Reg_Check(X7, X"FFFFF7FF", "Debug failed-> Invalid register X7");
+        Reg_Check(X8, X"3FFFF7FF", "Debug failed-> Invalid register X8");
         Reg_Check(X9, X"00000018", "Debug failed-> Invalid register X9");
         
         wait;
