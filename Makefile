@@ -4,7 +4,8 @@ FILES		= src/decoder.vhdl \
                src/memory.vhdl \
                src/instr_memory.vhdl \
                src/cpu.vhdl \
-               src/registers.vhdl
+               src/registers.vhdl\
+               pc/motherboard.vhdl
 SIMDIR		= sim
 SIMFILES	= test/decoder_tb.vhdl \
            test/mem_tb.vhdl \
@@ -17,7 +18,8 @@ SIMFILES	= test/decoder_tb.vhdl \
            test/bge_tb.vhdl \
            test/forloop_tb.vhdl \
            test/shift_tb.vhdl \
-           test/slt_tb.vhdl
+           test/slt_tb.vhdl \
+           test/motherboard_tb.vhdl
 
 # GHDL
 GHDL_CMD	= ghdl
@@ -49,9 +51,11 @@ compile:
 	ghdl -e -o sim/forloop_tb $(GHDL_FLAGS) $(GHDL_WORKDIR) forloop_tb
 	ghdl -e -o sim/shift_tb $(GHDL_FLAGS) $(GHDL_WORKDIR) shift_tb
 	ghdl -e -o sim/slt_tb $(GHDL_FLAGS) $(GHDL_WORKDIR) slt_tb
-
+	ghdl -e -o sim/motherboard_tb $(GHDL_FLAGS) $(GHDL_WORKDIR) motherboard_tb
+	
 run:
 	cd sim; \
+	ghdl -r $(GHDL_FLAGS) motherboard_tb --stop-time=250ns --wave=pc.ghw; \
 	ghdl -r $(GHDL_FLAGS) cpu_tb --stop-time=250ns --wave=cpu_tb.ghw; \
 	ghdl -r $(GHDL_FLAGS) cpu_tb1 --stop-time=1500ns --wave=cpu_test.ghw; \
 	ghdl -r $(GHDL_FLAGS) beq_tb --stop-time=800ns --wave=beq_tb.ghw; \
