@@ -1,0 +1,24 @@
+Hard-drive ports:
+
+IN/OUT: <4><4><4>
+-> Part 1: device type
+   Part 2: device num
+   Part 3: device op
+   
+Device types:
+1-> hard drives
+
+Drive Num = 4 bits (16 drives)
+Drive Op = 4 bits (16 operations)
+Data = 32 bits
+
+Drive operations (for simplicity, assume linear drive):
+0 -> ping
+1 -> seek
+2 -> Read
+3 -> Write
+4 -> Ready
+
+So:
+If "OUT" sends 0x100 -> ping hard drive 0
+   "OUT" sends 0x122 -> read hard drive 2

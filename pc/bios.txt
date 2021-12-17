@@ -1,0 +1,26 @@
+START:
+    xor x31, x31, x31
+    xor x30, x30, x30
+    xor x29, x29, x29
+    addi x28, x0, 1
+    addi x1, x0, 0x100   # Ping drive 0
+    in x2, x1
+    bne x2, x28, D2
+    addi x27, x0, 512    # MAX-> read first 512 instructions
+    add x28, x0, x0      # i
+D1_LOOP:
+    bge x28, x27, END
+    addi x1, x0, 0x101    # x1 contains seek command
+    addi x2, x0, 0x102    # x2 contains the read command
+    out x28, x1           # Seek hard drive to I
+    in x3, x2             # Read a word from the hard-drive
+    nop
+    nop
+    si x3, x28            # Store read data to i position in instruction memory
+    nop
+    addi x28, x28, 1
+    beq x0, x0, D1_LOOP
+D2:
+    hlt
+END:
+    hlt
