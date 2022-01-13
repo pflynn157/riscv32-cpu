@@ -51,6 +51,17 @@ architecture Behavior of Motherboard is
         );
     end component;
     
+    -- Declare the instruction memory component
+    component Instr_Memory is
+        port (
+            clk     : in std_logic;
+            I_write : in std_logic;
+            address : in std_logic_vector(31 downto 0);
+            I_data  : in std_logic_vector(31 downto 0);
+            O_data  : out std_logic_vector(31 downto 0)
+        );
+    end component;
+    
     -- The other signals
     signal Reset : std_logic := '0';
     signal I_instr, O_PC, O_Mem_Address, O_Mem_Data, I_Mem_Data : std_logic_vector(31 downto 0) := X"00000000";
@@ -66,6 +77,10 @@ architecture Behavior of Motherboard is
     signal I_write, SX : std_logic := '0';
     signal data_len : std_logic_vector(1 downto 0) := "00";
     signal address, I_data, O_data : std_logic_vector(31 downto 0) := X"00000000";
+    
+    -- The instruction memory signals
+    signal IX_write : std_logic := '0';
+    signal X_address, IX_data, OX_data : std_logic_vector(31 downto 0);
     
     -- IO signals
     signal O_IO_Port, O_IO_Cmd : std_logic_vector(4 downto 0) := "00000";
@@ -103,9 +118,9 @@ architecture Behavior of Motherboard is
     
     -- The ROM
     -- This would be equivalent to the BIOS
-    constant ROM_SIZE : integer := 12;
-    type instr_memory is array (0 to (ROM_SIZE - 1)) of std_logic_vector(31 downto 0);
-    signal rom_memory : instr_memory := (
+    constant ROM_SIZE : integer := 13;
+    type bios_memory is array (0 to (ROM_SIZE - 1)) of std_logic_vector(31 downto 0);
+    signal rom_memory : bios_memory := (
         "001111100001" & X0 & ALU_ADD & X1 & ALU_I_OP,        --[ 0] ADDI X1, X0, 1
         "000000000001" & X0 & ALU_ADD & X2 & ALU_I_OP,        --[ 1] ADDI X2, X0, 1
         "111111111011" & X0 & ALU_ADD & X3 & ALU_I_OP,        --[ 2] ADDI X3, X0, -5
@@ -117,7 +132,8 @@ architecture Behavior of Motherboard is
         "000000000000" & X0 & "000" & X1 & OUT_OP,            --[ 8] OUT X1, X0    (Port: 0x02, Cmd: 1 [seek SATA0 command])
         NOP,                                                  --[ 9] NOP
         "000000000000" & X3 & "000" & X2 & IN_OP,             --[10] IN X2, X3     (Port: 0x02, Cmd: 2 [read SATA0 command])
-        NOP                                                   --[11] NOP
+        "0000000" & X0 & X3 & "011" & "00000" & STORE_OP,     --[11] IST X3, [X0, 0]
+        NOP                                                   --[12] NOP
     );
 begin
     cpu_uut : CPU port map (
@@ -142,7 +158,7 @@ begin
     );
     
     -- Connect memory
-    mem_uut : Memory port map(
+    mem_uut : Memory port map (
         clk => clk,
         I_write => I_write,
         SX => SX,
@@ -150,6 +166,15 @@ begin
         address => address,
         I_data => I_data,
         O_data => O_data
+    );
+    
+    -- Connect instruction memory controller
+    ixmem_uut : Instr_Memory port map (
+        clk => clk,
+        I_write => IX_write,
+        address => X_address,
+        I_data => IX_data,
+        O_data => OX_data
     );
     
     -- The clock process
@@ -163,13 +188,22 @@ begin
     -- The main memory process
     process(O_Mem_Read, O_Mem_Write, O_Mem_SX, O_Mem_Address, O_Mem_Data, O_Data)
     begin
-        I_write <= O_Mem_Write;
-        SX <= O_Mem_SX;
-        Address <= O_Mem_Address;
-        I_data <= O_Mem_Data;
-        data_len <= O_Data_Len;
-        if O_Mem_Read = '1' then
-            I_Mem_Data <= O_Data;
+        if O_Data_Len = "10" then
+            IX_write <= O_Mem_Write;
+            X_Address <= O_Mem_Address;
+            IX_data <= O_Mem_Data;
+            --if O_Mem_Read = '1' then
+            --    IX_Mem_Data <= O_Data;
+            --end if;
+        else
+            I_write <= O_Mem_Write;
+            SX <= O_Mem_SX;
+            Address <= O_Mem_Address;
+            I_data <= O_Mem_Data;
+            data_len <= O_Data_Len;
+            if O_Mem_Read = '1' then
+                I_Mem_Data <= O_Data;
+            end if;
         end if;
     end process;
     

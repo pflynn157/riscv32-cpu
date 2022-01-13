@@ -226,27 +226,23 @@ begin
 		        
 		    -- Read data
 	        elsif Mem_Stage = 2 then
-	        	Mem_Stage <= 1;
+	        	    Mem_Stage <= 1;
 		        MemRead2 <= '0';
 		        MemRead3 <= '1';
 	        end if;
             
         -- The IN processor
         -- Handles input events and waits until they are ready
-        elsif rising_edge(clk) and IO_Read = '1' then
-            -- Wait a cycle
-            if IO_Stage = 1 then
-                IO_Stage <= 2;
-                
+        elsif rising_edge(clk) and IO_Read = '1' then 
             -- Write-back
-            elsif IO_Stage = 2 then
+            if IO_Stage = 1 then
                 I_enD <= '1';
                 sel_D <= sel_D_2;
                 I_dataD <= I_IO_Data;
-                IO_Stage <= 3;
+                IO_Stage <= 2;
                 
             -- Reset so we can return to the normal pipeline
-            elsif IO_Stage = 3 then
+            elsif IO_Stage = 2 then
                 IO_Stage <= 1;
                 IO_Read <= '0';
                 I_enD <= '0';
@@ -349,6 +345,7 @@ begin
                                 when "000" => Data_Len <= "00";
                                 when "001" => Data_Len <= "01";
                                 when "010" => Data_Len <= "11";
+                                when "011" => Data_Len <= "10";    -- Instruction memory store
                                 when others => Data_Len <= "00";
                             end case;
                             
@@ -364,6 +361,7 @@ begin
                             sel_D_1 <= rs1;
                             IO_Write <= '1';
                             IO_Read1 <= '1';
+                            WB_Stall <= 1;
                         
                         -- TODO: We should probably generate some sort of fault here...
                         when others =>
@@ -398,7 +396,7 @@ begin
                     MemData <= O_dataB;
                     Data_Len2 <= Data_Len;
                     
-                    if IO_Write = '1' then
+                    if IO_Write = '1' or IO_Read1 = '1' then
                         O_IO_Port <= O_dataA(4 downto 0);
                         O_IO_Cmd <= O_dataA(9 downto 5);
                         O_IO_Data <= O_dataB;

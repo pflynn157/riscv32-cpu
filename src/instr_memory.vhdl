@@ -18,10 +18,12 @@ architecture Behavior of Instr_Memory is
 begin
     process (clk, I_write, address, I_data)
     begin
-        O_data <= mem(to_integer(unsigned(address)));
-        
-        if I_write = '1' then
-            mem(to_integer(unsigned(address))) <= I_data;
+        if not is_X(address) then
+            O_data <= mem(to_integer(unsigned(address)));
+            
+            if I_write = '1' then
+                mem(to_integer(unsigned(address))) <= I_data;
+            end if;
         end if;
     end process;
 end Behavior;
