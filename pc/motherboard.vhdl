@@ -25,6 +25,7 @@ architecture Behavior of Motherboard is
             O_Data_Len    : out std_logic_vector(1 downto 0);
             I_Mem_Data    : in std_logic_vector(31 downto 0);
             O_IO_Port     : out std_logic_vector(4 downto 0);
+            O_IO_Cmd      : out std_logic_vector(4 downto 0);
             O_IO_Data     : out std_logic_vector(31 downto 0);
             I_IO_Data     : in std_logic_vector(31 downto 0);
             En_Debug      : in std_logic;
@@ -63,7 +64,7 @@ architecture Behavior of Motherboard is
     signal address, I_data, O_data : std_logic_vector(31 downto 0) := X"00000000";
     
     -- IO signals
-    signal O_IO_Port : std_logic_vector(4 downto 0) := "00000";
+    signal O_IO_Port, O_IO_Cmd : std_logic_vector(4 downto 0) := "00000";
     signal I_IO_Data, O_IO_Data : std_logic_vector(31 downto 0) := X"00000000";
     
     -- Opcodes
@@ -99,7 +100,7 @@ architecture Behavior of Motherboard is
     constant ROM_SIZE : integer := 5;
     type instr_memory is array (0 to (ROM_SIZE - 1)) of std_logic_vector(31 downto 0);
     signal rom_memory : instr_memory := (
-    	"000000000011" & X0 & ALU_ADD & X1 & ALU_I_OP,    --[ 0] ADDI X1, X0, 3
+        	"000000000011" & X0 & ALU_ADD & X1 & ALU_I_OP,    --[ 0] ADDI X1, X0, 3
         "000000000100" & X0 & ALU_ADD & X2 & ALU_I_OP,    --[ 1] ADDI X2, X0, 4
         "111111111011" & X0 & ALU_ADD & X3 & ALU_I_OP,    --[ 2] ADDI X3, X0, -5
         "0000000" & X0 & X2 & "010" & "00000" & STORE_OP, -- SW X2, [X0, 0]
@@ -119,6 +120,7 @@ begin
         O_Data_Len => O_Data_Len,
         I_Mem_Data => I_Mem_Data,
         O_IO_Port => O_IO_Port,
+        O_IO_Cmd => O_IO_Cmd,
         O_IO_Data => O_IO_Data,
         I_IO_Data => I_IO_Data,
         En_Debug => En_Debug,
@@ -140,8 +142,8 @@ begin
     -- The clock process
     process(clk)
     begin
-    	if rising_edge(clk) and (not is_X(O_PC)) and to_integer(unsigned(O_PC)) < ROM_SIZE then
-	    	I_instr <= rom_memory(to_integer(unsigned(O_PC)));
+        	if rising_edge(clk) and (not is_X(O_PC)) and to_integer(unsigned(O_PC)) < ROM_SIZE then
+	    	    I_instr <= rom_memory(to_integer(unsigned(O_PC)));
 	    end if;
     end process;
     

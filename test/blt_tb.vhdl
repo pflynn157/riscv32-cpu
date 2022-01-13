@@ -22,6 +22,7 @@ architecture Behavior of blt_tb is
             O_Data_Len    : out std_logic_vector(1 downto 0);
             I_Mem_Data    : in std_logic_vector(31 downto 0);
             O_IO_Port     : out std_logic_vector(4 downto 0);
+            O_IO_Cmd      : out std_logic_vector(4 downto 0);
             O_IO_Data     : out std_logic_vector(31 downto 0);
             I_IO_Data     : in std_logic_vector(31 downto 0);
             En_Debug      : in std_logic;
@@ -64,7 +65,7 @@ architecture Behavior of blt_tb is
     signal address, I_data, O_data : std_logic_vector(31 downto 0) := X"00000000";
     
     -- IO signals
-    signal O_IO_Port : std_logic_vector(4 downto 0) := "00000";
+    signal O_IO_Port, O_IO_Cmd : std_logic_vector(4 downto 0) := "00000";
     signal I_IO_Data, O_IO_Data : std_logic_vector(31 downto 0) := X"00000000";
     
     -- Our test programs
@@ -129,6 +130,7 @@ begin
         O_Data_Len => O_Data_Len,
         I_Mem_Data => I_Mem_Data,
         O_IO_Port => O_IO_Port,
+        O_IO_Cmd => O_IO_Cmd,
         O_IO_Data => O_IO_Data,
         I_IO_Data => I_IO_Data,
         En_Debug => En_Debug,
