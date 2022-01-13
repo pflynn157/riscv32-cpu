@@ -4,7 +4,8 @@ use IEEE.numeric_std.all;
 
 entity Motherboard is
     port (
-        clk : in std_logic
+        clk      : in std_logic;
+        Dsp_Data : out std_logic_vector(31 downto 0)    -- Data to be displayed by the monitor
     );
 end Motherboard;
 
@@ -160,6 +161,16 @@ begin
         data_len <= O_Data_Len;
         if O_Mem_Read = '1' then
             I_Mem_Data <= O_Data;
+        end if;
+    end process;
+    
+    -- The IO process
+    process(O_IO_Port, O_IO_Cmd, O_IO_Data, I_IO_Data)
+    begin
+        if O_IO_Port = "00001" then
+            if O_IO_Cmd = "11111" then
+                Dsp_Data <= X"4869210A";
+            end if;
         end if;
     end process;
 end Behavior;
