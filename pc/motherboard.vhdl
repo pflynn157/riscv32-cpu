@@ -24,6 +24,9 @@ architecture Behavior of Motherboard is
             O_Mem_Data    : out std_logic_vector(31 downto 0);
             O_Data_Len    : out std_logic_vector(1 downto 0);
             I_Mem_Data    : in std_logic_vector(31 downto 0);
+            O_IO_Port     : out std_logic_vector(4 downto 0);
+            O_IO_Data     : out std_logic_vector(31 downto 0);
+            I_IO_Data     : in std_logic_vector(31 downto 0);
             En_Debug      : in std_logic;
             DB_Reg_Sel    : in std_logic_vector(4 downto 0);
             DB_Data       : out std_logic_vector(31 downto 0)
@@ -58,6 +61,10 @@ architecture Behavior of Motherboard is
     signal I_write, SX : std_logic := '0';
     signal data_len : std_logic_vector(1 downto 0) := "00";
     signal address, I_data, O_data : std_logic_vector(31 downto 0) := X"00000000";
+    
+    -- IO signals
+    signal O_IO_Port : std_logic_vector(4 downto 0) := "00000";
+    signal I_IO_Data, O_IO_Data : std_logic_vector(31 downto 0) := X"00000000";
     
     -- Opcodes
     constant NOP : std_logic_vector := X"00000000";
@@ -111,6 +118,9 @@ begin
         O_Mem_Data => O_Mem_Data,
         O_Data_Len => O_Data_Len,
         I_Mem_Data => I_Mem_Data,
+        O_IO_Port => O_IO_Port,
+        O_IO_Data => O_IO_Data,
+        I_IO_Data => I_IO_Data,
         En_Debug => En_Debug,
         DB_Reg_Sel => DB_Reg_Sel,
         DB_Data => DB_Data

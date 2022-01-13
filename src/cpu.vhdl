@@ -15,6 +15,9 @@ entity CPU is
         O_Mem_Data    : out std_logic_vector(31 downto 0);
         O_Data_Len    : out std_logic_vector(1 downto 0);
         I_Mem_Data    : in std_logic_vector(31 downto 0);
+        O_IO_Port     : out std_logic_vector(4 downto 0);    -- Address of the output port in question
+        O_IO_Data     : out std_logic_vector(31 downto 0);   -- Data sent to the output port
+        I_IO_Data     : in std_logic_vector(31 downto 0);    -- Data received from IO port
         En_Debug      : in std_logic;                        -- Enables debug for automated testing
         DB_Reg_Sel    : in std_logic_vector(4 downto 0);     -- Select the register
         DB_Data       : out std_logic_vector(31 downto 0)    -- Output the debug data

@@ -1,14 +1,14 @@
 [*]
-[*] GTKWave Analyzer v3.3.109 (w)1999-2020 BSI
-[*] Fri Dec 17 00:50:06 2021
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Thu Jan 13 12:13:40 2022
 [*]
-[dumpfile] "/home/patrick/Projects/riscv32-cpu/sim/pc.ghw"
-[dumpfile_mtime] "Fri Dec 17 00:49:24 2021"
+[dumpfile] "/home/patrick/Projects/ooto_project/riscv32-cpu/sim/pc.ghw"
+[dumpfile_mtime] "Thu Jan 13 12:11:42 2022"
 [dumpfile_size] 2095086
-[savefile] "/home/patrick/Projects/riscv32-cpu/pc.gtkw"
+[savefile] "/home/patrick/Projects/ooto_project/riscv32-cpu/pc.gtkw"
 [timestart] 0
-[size] 1920 1051
-[pos] -1 -1
+[size] 1920 1055
+[pos] 1919 -1
 *-24.990461 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
 [treeopen] top.motherboard_tb.
@@ -16,7 +16,7 @@
 [sst_width] 219
 [signals_width] 159
 [sst_expanded] 1
-[sst_vpaned_height] 302
+[sst_vpaned_height] 314
 @28
 top.motherboard_tb.clk
 @200
