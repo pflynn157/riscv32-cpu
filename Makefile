@@ -19,7 +19,8 @@ SIMFILES	= test/decoder_tb.vhdl \
            test/forloop_tb.vhdl \
            test/shift_tb.vhdl \
            test/slt_tb.vhdl \
-           test/motherboard_tb.vhdl
+           test/motherboard_tb.vhdl \
+           test/pc_tb.vhdl
 
 # GHDL
 GHDL_CMD	= ghdl
@@ -52,8 +53,15 @@ compile:
 	ghdl -e -o sim/shift_tb $(GHDL_FLAGS) $(GHDL_WORKDIR) shift_tb
 	ghdl -e -o sim/slt_tb $(GHDL_FLAGS) $(GHDL_WORKDIR) slt_tb
 	ghdl -e -o sim/motherboard_tb $(GHDL_FLAGS) $(GHDL_WORKDIR) motherboard_tb
+	ghdl -e -o sim/pc_tb $(GHDL_FLAGS) $(GHDL_WORKDIR) pc_tb
 	
 run:
+	cd sim; \
+	ghdl -r $(GHDL_FLAGS) pc_tb --stop-time=250ns --wave=pc2.ghw; \
+	cd ..
+
+.PHONY: run_mb
+run_mb:
 	cd sim; \
 	ghdl -r $(GHDL_FLAGS) motherboard_tb --stop-time=250ns --wave=pc.ghw; \
 	cd ..
