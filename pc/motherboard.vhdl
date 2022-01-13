@@ -4,8 +4,11 @@ use IEEE.numeric_std.all;
 
 entity Motherboard is
     port (
-        clk      : in std_logic;
-        Dsp_Data : out std_logic_vector(31 downto 0)    -- Data to be displayed by the monitor
+        clk          : in std_logic;
+        Dsp_Data     : out std_logic_vector(31 downto 0);    -- Data to be displayed by the monitor
+        Sata0_Cmd    : out std_logic_vector(4 downto 0);    -- Command for drive 0
+        O_Sata0_Data : out std_logic_vector(31 downto 0);
+        I_Sata0_Data : in std_logic_vector(31 downto 0)
     );
 end Motherboard;
 
@@ -76,6 +79,7 @@ architecture Behavior of Motherboard is
     constant LOAD_OP : std_logic_vector := "0000011";
     constant BR_OP : std_logic_vector := "1100011";
     constant OUT_OP : std_logic_vector := "0000111";
+    constant IN_OP  : std_logic_vector := "0001111";
     constant ALU_ADD : std_logic_vector := "000";
     constant ALU_SLL : std_logic_vector := "001";
     constant ALU_SLT : std_logic_vector := "010";
@@ -99,16 +103,21 @@ architecture Behavior of Motherboard is
     
     -- The ROM
     -- This would be equivalent to the BIOS
-    constant ROM_SIZE : integer := 7;
+    constant ROM_SIZE : integer := 12;
     type instr_memory is array (0 to (ROM_SIZE - 1)) of std_logic_vector(31 downto 0);
     signal rom_memory : instr_memory := (
         "001111100001" & X0 & ALU_ADD & X1 & ALU_I_OP,        --[ 0] ADDI X1, X0, 1
-        "000000011111" & X0 & ALU_ADD & X2 & ALU_I_OP,        --[ 1] ADDI X2, X0, 32
+        "000000000001" & X0 & ALU_ADD & X2 & ALU_I_OP,        --[ 1] ADDI X2, X0, 1
         "111111111011" & X0 & ALU_ADD & X3 & ALU_I_OP,        --[ 2] ADDI X3, X0, -5
         "0000000" & X0 & X2 & "010" & "00000" & STORE_OP,     --[ 3] SW X2, [X0, 0]
         NOP,                                                  --[ 4] NOP
-        "000000000000" & X2 & "000" & X1 & OUT_OP,            --[ 5] OUT X1, X2    (Port: 0x01, Cmd: 31 [test command])
-        NOP                                                   --[ 6] NOP
+        "000000000000" & X0 & "000" & X1 & OUT_OP,            --[ 5] OUT X1, X0    (Port: 0x01, Cmd: 31 [test command])
+        "000000100010" & X0 & ALU_ADD & X1 & ALU_I_OP,        --[ 6] ADDI X1, X0, 2
+        "000001000010" & X0 & ALU_ADD & X2 & ALU_I_OP,        --[ 7] ADDI X2, X0, 0
+        "000000000000" & X0 & "000" & X1 & OUT_OP,            --[ 8] OUT X1, X0    (Port: 0x02, Cmd: 1 [seek SATA0 command])
+        NOP,                                                  --[ 9] NOP
+        "000000000000" & X3 & "000" & X2 & IN_OP,             --[10] IN X2, X3     (Port: 0x02, Cmd: 2 [read SATA0 command])
+        NOP                                                   --[11] NOP
     );
 begin
     cpu_uut : CPU port map (
@@ -165,12 +174,24 @@ begin
     end process;
     
     -- The IO process
-    process(O_IO_Port, O_IO_Cmd, O_IO_Data, I_IO_Data)
+    process(O_IO_Port, O_IO_Cmd, O_IO_Data)
     begin
+        -- Display port
         if O_IO_Port = "00001" then
             if O_IO_Cmd = "11111" then
                 Dsp_Data <= X"4869210A";
             end if;
+            
+        -- SATA 0
+        elsif O_IO_Port = "00010" then
+            Sata0_Cmd <= O_IO_Cmd;
+            O_Sata0_Data <= O_IO_Data;
         end if;
+    end process;
+    
+    -- Sata0 process
+    process(I_Sata0_Data)
+    begin
+        I_IO_Data <= I_Sata0_Data;
     end process;
 end Behavior;
