@@ -56,6 +56,11 @@ compile:
 run:
 	cd sim; \
 	ghdl -r $(GHDL_FLAGS) motherboard_tb --stop-time=250ns --wave=pc.ghw; \
+	cd ..
+
+.PHONY: test	
+test:
+	cd sim; \
 	ghdl -r $(GHDL_FLAGS) cpu_tb --stop-time=250ns --wave=cpu_tb.ghw; \
 	ghdl -r $(GHDL_FLAGS) cpu_tb1 --stop-time=1500ns --wave=cpu_test.ghw; \
 	ghdl -r $(GHDL_FLAGS) beq_tb --stop-time=800ns --wave=beq_tb.ghw; \
