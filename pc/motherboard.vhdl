@@ -74,6 +74,7 @@ architecture Behavior of Motherboard is
     constant STORE_OP : std_logic_vector := "0100011";
     constant LOAD_OP : std_logic_vector := "0000011";
     constant BR_OP : std_logic_vector := "1100011";
+    constant OUT_OP : std_logic_vector := "0000111";
     constant ALU_ADD : std_logic_vector := "000";
     constant ALU_SLL : std_logic_vector := "001";
     constant ALU_SLT : std_logic_vector := "010";
@@ -97,14 +98,16 @@ architecture Behavior of Motherboard is
     
     -- The ROM
     -- This would be equivalent to the BIOS
-    constant ROM_SIZE : integer := 5;
+    constant ROM_SIZE : integer := 7;
     type instr_memory is array (0 to (ROM_SIZE - 1)) of std_logic_vector(31 downto 0);
     signal rom_memory : instr_memory := (
-        	"000000000011" & X0 & ALU_ADD & X1 & ALU_I_OP,    --[ 0] ADDI X1, X0, 3
-        "000000000100" & X0 & ALU_ADD & X2 & ALU_I_OP,    --[ 1] ADDI X2, X0, 4
-        "111111111011" & X0 & ALU_ADD & X3 & ALU_I_OP,    --[ 2] ADDI X3, X0, -5
-        "0000000" & X0 & X2 & "010" & "00000" & STORE_OP, -- SW X2, [X0, 0]
-        NOP
+        "001111100001" & X0 & ALU_ADD & X1 & ALU_I_OP,        --[ 0] ADDI X1, X0, 1
+        "000000011111" & X0 & ALU_ADD & X2 & ALU_I_OP,        --[ 1] ADDI X2, X0, 32
+        "111111111011" & X0 & ALU_ADD & X3 & ALU_I_OP,        --[ 2] ADDI X3, X0, -5
+        "0000000" & X0 & X2 & "010" & "00000" & STORE_OP,     --[ 3] SW X2, [X0, 0]
+        NOP,                                                  --[ 4] NOP
+        "000000000000" & X2 & "000" & X1 & OUT_OP,            --[ 5] OUT X1, X2    (Port: 0x01, Cmd: 31 [test command])
+        NOP                                                   --[ 6] NOP
     );
 begin
     cpu_uut : CPU port map (

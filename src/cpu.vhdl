@@ -97,6 +97,7 @@ architecture Behavior of CPU is
     signal Br_Op : std_logic_vector(2 downto 0);
     signal Br : std_logic := '0';
     signal Br_stage, Mem_stage : integer := 1;
+    signal IO_Write : std_logic := '0';
 
     -- Pipeline and program counter signals
     signal PC : std_logic_vector(31 downto 0) := X"00000000";
@@ -250,6 +251,7 @@ begin
                     MemRead <= '0';
                     Mem_SX <= '0';
                     Br <= '0';
+                    IO_Write <= '0';
                     
                     case opcode is
                         -- ALU instructions
@@ -327,6 +329,12 @@ begin
                                 when "010" => Data_Len <= "11";
                                 when others => Data_Len <= "00";
                             end case;
+                            
+                        -- OUT instruction
+                        when "0000111" =>
+                            sel_A <= rd;
+                            sel_B <= rs1;
+                            IO_write <= '1';
                         
                         -- TODO: We should probably generate some sort of fault here...
                         when others =>
@@ -361,11 +369,17 @@ begin
                     MemData <= O_dataB;
                     Data_Len2 <= Data_Len;
                     
-                    A <= O_dataA;
-                    if srcImm = '1' then
-                        B <= srcImm_In;
+                    if IO_Write = '1' then
+                        O_IO_Port <= O_dataA(4 downto 0);
+                        O_IO_Cmd <= O_dataA(9 downto 5);
+                        O_IO_Data <= O_dataB;
                     else
-                        B <= O_dataB;
+                        A <= O_dataA;
+                        if srcImm = '1' then
+                            B <= srcImm_In;
+                        else
+                            B <= O_dataB;
+                        end if;
                     end if;
                 
                 -- Memory

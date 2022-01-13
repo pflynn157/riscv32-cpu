@@ -1,14 +1,14 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Thu Jan 13 12:13:40 2022
+[*] Thu Jan 13 13:24:01 2022
 [*]
 [dumpfile] "/home/patrick/Projects/ooto_project/riscv32-cpu/sim/pc.ghw"
-[dumpfile_mtime] "Thu Jan 13 12:11:42 2022"
-[dumpfile_size] 2095086
+[dumpfile_mtime] "Thu Jan 13 13:23:20 2022"
+[dumpfile_size] 2096133
 [savefile] "/home/patrick/Projects/ooto_project/riscv32-cpu/pc.gtkw"
 [timestart] 0
 [size] 1920 1055
-[pos] 1919 -1
+[pos] -1 -1
 *-24.990461 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
 [treeopen] top.motherboard_tb.
@@ -38,7 +38,14 @@ top.motherboard_tb.clk
 #{top.motherboard_tb.uut.mem_uut.mem[0][1][7:0]} top.motherboard_tb.uut.mem_uut.mem[0][1][7] top.motherboard_tb.uut.mem_uut.mem[0][1][6] top.motherboard_tb.uut.mem_uut.mem[0][1][5] top.motherboard_tb.uut.mem_uut.mem[0][1][4] top.motherboard_tb.uut.mem_uut.mem[0][1][3] top.motherboard_tb.uut.mem_uut.mem[0][1][2] top.motherboard_tb.uut.mem_uut.mem[0][1][1] top.motherboard_tb.uut.mem_uut.mem[0][1][0]
 #{top.motherboard_tb.uut.mem_uut.mem[0][2][7:0]} top.motherboard_tb.uut.mem_uut.mem[0][2][7] top.motherboard_tb.uut.mem_uut.mem[0][2][6] top.motherboard_tb.uut.mem_uut.mem[0][2][5] top.motherboard_tb.uut.mem_uut.mem[0][2][4] top.motherboard_tb.uut.mem_uut.mem[0][2][3] top.motherboard_tb.uut.mem_uut.mem[0][2][2] top.motherboard_tb.uut.mem_uut.mem[0][2][1] top.motherboard_tb.uut.mem_uut.mem[0][2][0]
 #{top.motherboard_tb.uut.mem_uut.mem[0][3][7:0]} top.motherboard_tb.uut.mem_uut.mem[0][3][7] top.motherboard_tb.uut.mem_uut.mem[0][3][6] top.motherboard_tb.uut.mem_uut.mem[0][3][5] top.motherboard_tb.uut.mem_uut.mem[0][3][4] top.motherboard_tb.uut.mem_uut.mem[0][3][3] top.motherboard_tb.uut.mem_uut.mem[0][3][2] top.motherboard_tb.uut.mem_uut.mem[0][3][1] top.motherboard_tb.uut.mem_uut.mem[0][3][0]
-@23
 #{top.motherboard_tb.uut.mem_uut.mem[0][4][7:0]} top.motherboard_tb.uut.mem_uut.mem[0][4][7] top.motherboard_tb.uut.mem_uut.mem[0][4][6] top.motherboard_tb.uut.mem_uut.mem[0][4][5] top.motherboard_tb.uut.mem_uut.mem[0][4][4] top.motherboard_tb.uut.mem_uut.mem[0][4][3] top.motherboard_tb.uut.mem_uut.mem[0][4][2] top.motherboard_tb.uut.mem_uut.mem[0][4][1] top.motherboard_tb.uut.mem_uut.mem[0][4][0]
+@200
+-
+@22
+#{top.motherboard_tb.uut.o_io_port[4:0]} top.motherboard_tb.uut.o_io_port[4] top.motherboard_tb.uut.o_io_port[3] top.motherboard_tb.uut.o_io_port[2] top.motherboard_tb.uut.o_io_port[1] top.motherboard_tb.uut.o_io_port[0]
+#{top.motherboard_tb.uut.o_io_cmd[4:0]} top.motherboard_tb.uut.o_io_cmd[4] top.motherboard_tb.uut.o_io_cmd[3] top.motherboard_tb.uut.o_io_cmd[2] top.motherboard_tb.uut.o_io_cmd[1] top.motherboard_tb.uut.o_io_cmd[0]
+#{top.motherboard_tb.uut.o_io_data[31:0]} top.motherboard_tb.uut.o_io_data[31] top.motherboard_tb.uut.o_io_data[30] top.motherboard_tb.uut.o_io_data[29] top.motherboard_tb.uut.o_io_data[28] top.motherboard_tb.uut.o_io_data[27] top.motherboard_tb.uut.o_io_data[26] top.motherboard_tb.uut.o_io_data[25] top.motherboard_tb.uut.o_io_data[24] top.motherboard_tb.uut.o_io_data[23] top.motherboard_tb.uut.o_io_data[22] top.motherboard_tb.uut.o_io_data[21] top.motherboard_tb.uut.o_io_data[20] top.motherboard_tb.uut.o_io_data[19] top.motherboard_tb.uut.o_io_data[18] top.motherboard_tb.uut.o_io_data[17] top.motherboard_tb.uut.o_io_data[16] top.motherboard_tb.uut.o_io_data[15] top.motherboard_tb.uut.o_io_data[14] top.motherboard_tb.uut.o_io_data[13] top.motherboard_tb.uut.o_io_data[12] top.motherboard_tb.uut.o_io_data[11] top.motherboard_tb.uut.o_io_data[10] top.motherboard_tb.uut.o_io_data[9] top.motherboard_tb.uut.o_io_data[8] top.motherboard_tb.uut.o_io_data[7] top.motherboard_tb.uut.o_io_data[6] top.motherboard_tb.uut.o_io_data[5] top.motherboard_tb.uut.o_io_data[4] top.motherboard_tb.uut.o_io_data[3] top.motherboard_tb.uut.o_io_data[2] top.motherboard_tb.uut.o_io_data[1] top.motherboard_tb.uut.o_io_data[0]
+@23
+#{top.motherboard_tb.uut.i_io_data[31:0]} top.motherboard_tb.uut.i_io_data[31] top.motherboard_tb.uut.i_io_data[30] top.motherboard_tb.uut.i_io_data[29] top.motherboard_tb.uut.i_io_data[28] top.motherboard_tb.uut.i_io_data[27] top.motherboard_tb.uut.i_io_data[26] top.motherboard_tb.uut.i_io_data[25] top.motherboard_tb.uut.i_io_data[24] top.motherboard_tb.uut.i_io_data[23] top.motherboard_tb.uut.i_io_data[22] top.motherboard_tb.uut.i_io_data[21] top.motherboard_tb.uut.i_io_data[20] top.motherboard_tb.uut.i_io_data[19] top.motherboard_tb.uut.i_io_data[18] top.motherboard_tb.uut.i_io_data[17] top.motherboard_tb.uut.i_io_data[16] top.motherboard_tb.uut.i_io_data[15] top.motherboard_tb.uut.i_io_data[14] top.motherboard_tb.uut.i_io_data[13] top.motherboard_tb.uut.i_io_data[12] top.motherboard_tb.uut.i_io_data[11] top.motherboard_tb.uut.i_io_data[10] top.motherboard_tb.uut.i_io_data[9] top.motherboard_tb.uut.i_io_data[8] top.motherboard_tb.uut.i_io_data[7] top.motherboard_tb.uut.i_io_data[6] top.motherboard_tb.uut.i_io_data[5] top.motherboard_tb.uut.i_io_data[4] top.motherboard_tb.uut.i_io_data[3] top.motherboard_tb.uut.i_io_data[2] top.motherboard_tb.uut.i_io_data[1] top.motherboard_tb.uut.i_io_data[0]
 [pattern_trace] 1
 [pattern_trace] 0
